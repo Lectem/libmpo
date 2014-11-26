@@ -31,19 +31,29 @@ jpeg_getc (j_decompress_ptr cinfo)
 }
 
 LOCAL(INT32)
-jpeg_getint16 (j_decompress_ptr cinfo)
+jpeg_getint16 (j_decompress_ptr cinfo, int swapEndian)
 {
-    return  jpeg_getc(cinfo)<<8 |
-            jpeg_getc(cinfo);
+    if(swapEndian)
+        return  jpeg_getc(cinfo)<<8 |
+                jpeg_getc(cinfo);
+    else
+        return  jpeg_getc(cinfo)|
+                jpeg_getc(cinfo)<<8;
 }
 
 LOCAL(INT32)
-jpeg_getint32 (j_decompress_ptr cinfo)
+jpeg_getint32 (j_decompress_ptr cinfo, int swapEndian)
 {
-    return  jpeg_getc(cinfo)<<24|
-            jpeg_getc(cinfo)<<16|
-            jpeg_getc(cinfo)<<8 |
-            jpeg_getc(cinfo);
+    if(swapEndian)
+        return  jpeg_getc(cinfo)<<24|
+                jpeg_getc(cinfo)<<16|
+                jpeg_getc(cinfo)<<8 |
+                jpeg_getc(cinfo);
+    else
+        return  jpeg_getc(cinfo)    |
+                jpeg_getc(cinfo)<<8 |
+                jpeg_getc(cinfo)<<16|
+                jpeg_getc(cinfo)<<24;
 }
 
 
@@ -120,14 +130,14 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
         while(length-- >0){jpeg_getc(cinfo);}
         return 0;
     }
-    data.byte_order= jpeg_getint32(cinfo);
+    data.byte_order= jpeg_getint32(cinfo,1);
     length-=4;
-
+    int isLittleIndian=data.byte_order == LITTLE_ENDIAN;
     /*TODO : Take the endianess into account...*/
 
-    data.first_IFD_offset=jpeg_getint32(cinfo);
+    data.first_IFD_offset=jpeg_getint32(cinfo,isLittleIndian);
     length-=4;
-    data.count=jpeg_getint16(cinfo);
+    data.count=jpeg_getint16(cinfo,isLittleIndian);
     length-=2;
 /*TODO move TAG|Value parsing into another func*/
 /*
@@ -228,6 +238,7 @@ void decompress_mpo(char* filename)
 
             int index=0;
             int i;
+            /*Quick and dirty hack to reach 2nd image*/
             for(i=1; i<size-3; i++)
             {
                 if(src_buffer[i] ==0xFF && src_buffer[i+1] ==0xD8
