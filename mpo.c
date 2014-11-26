@@ -3,6 +3,16 @@
 #include <jpeglib.h>
 #include "include/mpo.h"
 
+
+/*Change this depending on your platform endianness*/
+
+char isLittleEndian()
+{
+    short int number = 0x1;
+    char *numPtr = (char*)&number;
+    return (numPtr[0] == 1);
+}
+
 //
 //struct my_error_mgr {
 //  struct jpeg_error_mgr pub;	/* "public" fields */
@@ -132,12 +142,12 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
     }
     data.byte_order= jpeg_getint32(cinfo,1);
     length-=4;
-    int isLittleIndian=data.byte_order == LITTLE_ENDIAN;
+    int endiannessSwap=isLittleEndian() ^ (data.byte_order == LITTLE_ENDIAN);
     /*TODO : Take the endianess into account...*/
 
-    data.first_IFD_offset=jpeg_getint32(cinfo,isLittleIndian);
+    data.first_IFD_offset=jpeg_getint32(cinfo,endiannessSwap);
     length-=4;
-    data.count=jpeg_getint16(cinfo,isLittleIndian);
+    data.count=jpeg_getint16(cinfo,endiannessSwap);
     length-=2;
 /*TODO move TAG|Value parsing into another func*/
 /*
