@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <jpeglib.h>
 #include <assert.h>
 #include "include/mpo.h"
 
@@ -68,78 +65,19 @@ jpeg_getint32 (j_decompress_ptr cinfo, int swapEndian)
 }
 
 
-
-/* See the DC-007_E Specification. */
-/* 5.2.2.1  Table 3, page 13 */
-typedef enum{ LITTLE_ENDIAN = 0x49492A00,
-    BIG_ENDIAN = 0x4D4D002A }MPExt_ByteOrder;
-
-/* See the DC-007_E Specification. */
-/* 5.2.2.3  Table 3, page 13 */
-typedef enum
+void destroyMP_Data(MPExt_Data *data)
 {
-    /*Mandatory*/
-    MPTag_MPFVersion        = 0xB000,
-    MPTag_NumberOfImages    = 0xB001,
-    MPTag_MPEntry           = 0xB002,
-    /*Optional*/
-    MPTag_ImageUIDList      = 0xB003,
-    MPTag_TotalFrames       = 0xB004
-}MPExt_MPIndexIFDTags;
-
-typedef union
-{
-    long value;
-    struct {
-        unsigned int dependentParent:1;
-        unsigned int dependentChild:1;
-        unsigned int representativeImage:1;
-        unsigned int reserved:2;
-        unsigned int imgType:3;
-        unsigned int MPTypeCode:24;
-    } data;
+    if(data->MPentry)
+    {
+        free(data->MPentry);
+        data->MPentry=NULL;
+    }
 }
-MPExt_IndividualImageAttr;
-
-typedef enum
-{
-    MPType_Baseline =0x030000,
-    MPType_LargeThumbnail_Mask =0x010000,
-    MPType_LargeThumbnail_Class1 =0x010001, /*VGA Equivalent*/
-    MPType_LargeThumbnail_Class2 =0x010002, /*Full HD Equivalent*/
-    MPType_MultiFrame_Mask =0x030000,
-    MPType_MultiFrame_Panorama =0x030001,
-    MPType_MultiFrame_Disparity =0x030002,
-    MPType_MultiFrame_MultiAngle =0x030003
-}
-MPExt_MPType;
-
-typedef struct
-{
-    MPExt_IndividualImageAttr individualImgAttr;
-    long size;
-    long offset;
-    INT16 dependentImageEntry1;
-    INT16 dependentImageEntry2;
-}
-MPExt_MPEntry;
-
-typedef struct
-{
-    char MPF_identifier[4];
-    MPExt_ByteOrder byte_order;
-    INT32 first_IFD_offset;
-    /*MP Index IFD*/
-    INT16 count;
-    char version[4];
-    long numberOfImages;
-
-}
-MPExt_Data;
 
 METHODDEF(boolean)
 print_APP02_MPF (MPExt_Data *data)
 {
+    int i;
     if(data->MPF_identifier[0] != 'M'||
        data->MPF_identifier[1] != 'P'||
        data->MPF_identifier[2] != 'F'||
@@ -159,19 +97,53 @@ print_APP02_MPF (MPExt_Data *data)
     printf("---MP Index IFD---\n");
     printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
     printf("Number of images:\t%ld\n",data->numberOfImages);
+    if(data->currentEntry>0)printf("%d entries listed\n",data->currentEntry);
+    for(i=0;i<data->currentEntry;++i)
+    {
+        printf("Size:\t\t\t%ld\nOffset:\t\t\t%ld\n",data->MPentry[i].size,data->MPentry[i].offset);
+        if(data->MPentry[i].individualImgAttr.data.dependentChild)printf("Dependent child image\n");
+        if(data->MPentry[i].individualImgAttr.data.dependentParent)printf("Dependent parent image\n");
+        if(data->MPentry[i].individualImgAttr.data.representativeImage)printf("Representative image\n");
+        if(data->MPentry[i].individualImgAttr.data.imgType == 0)printf("Image Type : JPEG\n");
+    }
+
+
     printf("-----------------End of MPF-----------------\n\n\n");
     return TRUE;
 }
 
 
+METHODDEF(int)
+MPExtReadValueIFD (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
+{
+    int read_bytes=0;
+    data->MPentry=(MPExt_MPEntry*)calloc(data->numberOfImages,sizeof(MPExt_MPEntry));
+    for(data->currentEntry=0;data->currentEntry < data->numberOfImages;data->currentEntry++)
+    {
+        data->MPentry[data->currentEntry].individualImgAttr.value=jpeg_getint32(cinfo,swapEndian);
+        read_bytes+=4;
+        data->MPentry[data->currentEntry].size=jpeg_getint32(cinfo,swapEndian);
+        read_bytes+=4;
+        data->MPentry[data->currentEntry].offset=jpeg_getint32(cinfo,swapEndian);
+        read_bytes+=4;
+        data->MPentry[data->currentEntry].dependentImageEntry1=jpeg_getint16(cinfo,swapEndian);
+        read_bytes+=2;
+        data->MPentry[data->currentEntry].dependentImageEntry2=jpeg_getint16(cinfo,swapEndian);
+        read_bytes+=2;
+    }
+    return read_bytes;
+}
 
-METHODDEF(void)
-MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data,int* length, int swapEndian)
+
+METHODDEF(int)
+MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
 {
     int i;
     unsigned int tag=0;
     tag=jpeg_getint16(cinfo,swapEndian);
-    *length-=2;
+    int read_bytes=2;
+
+
     switch(tag)
     {
     case MPTag_MPFVersion :
@@ -179,22 +151,26 @@ MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data,int* length, int swapEndia
         /*Retrieve only the 4 lasts characters, should be equal to 0100                             */
         for(i=0;i<6;++i)(void)jpeg_getc(cinfo);//Discard the 6 first bytes : not used by the specs
         for(i=0;i<4;++i)data->version[i]=jpeg_getc(cinfo);
+        read_bytes+=10;
         break;
     case MPTag_NumberOfImages :
         /*NumberOfImages block size is 12bytes*/
-        jpeg_getint16(cinfo,swapEndian);*length-=2;
-        jpeg_getint32(cinfo,swapEndian);*length-=4;
+        jpeg_getint16(cinfo,swapEndian);read_bytes+=2;
+        jpeg_getint32(cinfo,swapEndian);read_bytes+=4;
         /*Long value = last for 4 bytes ?*/
-        data->numberOfImages=jpeg_getint32(cinfo,swapEndian);*length-=4;
+        data->numberOfImages=jpeg_getint32(cinfo,swapEndian);read_bytes+=4;
         break;
     case MPTag_MPEntry:
-
+            data->EntryIndex.type=jpeg_getint16(cinfo,swapEndian);read_bytes+=2;
+            data->EntryIndex.EntriesTabLength=jpeg_getint32(cinfo,swapEndian);read_bytes+=4;
+            data->EntryIndex.FirstEntryOffset=jpeg_getint32(cinfo,swapEndian);read_bytes+=4;
         break;
     /*Non mandatory*/
     default:
-        printf("-----------------------TAG : 0x%x--------------------\n",tag);
+        printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
         break;
     }
+    return read_bytes;
 }
 METHODDEF(boolean)
 MPExtReadAPP02 (j_decompress_ptr cinfo)
@@ -239,11 +215,24 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
         length--;
     }
     assert(OFFSET_START - data.first_IFD_offset == length);
-    data.count=jpeg_getint16(cinfo,endiannessSwap);
+    data.count=jpeg_getint16(cinfo,endiannessSwap);/*Number of tags*/
     length-=2;
-    MPExtReadTag(cinfo,&data,&length,endiannessSwap);
-    MPExtReadTag(cinfo,&data,&length,endiannessSwap);
+    for(i=0;i<data.count;++i)
+    {
+        length-=MPExtReadTag(cinfo,&data,endiannessSwap);
+    }
+    data.nextIFDOffset=jpeg_getint32(cinfo,endiannessSwap);
+    length-=4;
+    MPExtReadValueIFD(cinfo,&data,endiannessSwap);
+
     print_APP02_MPF(&data);
+    /*****************************************************************************************/
+    /************************************DONT FORGET IT !*************************************/
+    /************************Will probably be moved somewhere else****************************/
+    destroyMP_Data(&data);
+    /*****************************************************************************************/
+    /*****************************************************************************************/
+
     return 1;
 }
 
