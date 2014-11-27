@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <jpeglib.h>
+#include <assert.h>
 #include "include/mpo.h"
 
 
@@ -154,7 +155,7 @@ print_APP02_MPF (MPExt_Data *data)
     else if(data->byte_order == BIG_ENDIAN)
         printf("Byte order:\tbig endian\n");
     else printf("Couldn't recognize byte order : 0x%x\n",data->byte_order);
-    printf("First FID offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
+    printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
     printf("---MP Index IFD---\n");
     printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
     printf("Number of images:\t%ld\n",data->numberOfImages);
@@ -222,6 +223,9 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
         while(length-- >0){jpeg_getc(cinfo);}
         return 1;
     }
+
+    int OFFSET_START = length;
+
     data.byte_order= jpeg_getint32(cinfo,1);
     length-=4;
     int endiannessSwap=isLittleEndian() ^ (data.byte_order == LITTLE_ENDIAN);
@@ -229,6 +233,12 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
 
     data.first_IFD_offset=jpeg_getint32(cinfo,endiannessSwap);
     length-=4;
+    while(OFFSET_START - data.first_IFD_offset< length ) //While we didn't reach the IFD...
+    {
+        jpeg_getc(cinfo);
+        length--;
+    }
+    assert(OFFSET_START - data.first_IFD_offset == length);
     data.count=jpeg_getint16(cinfo,endiannessSwap);
     length-=2;
     MPExtReadTag(cinfo,&data,&length,endiannessSwap);
