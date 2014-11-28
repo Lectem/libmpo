@@ -97,7 +97,7 @@ print_APP02_MPF (MPExt_Data *data)
     printf("---MP Index IFD---\n");
     printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
     printf("Number of images:\t%ld\n",data->numberOfImages);
-    if(data->currentEntry>0)printf("%d entries listed\n",data->currentEntry);
+    if(data->currentEntry>0)printf("%ld entries listed\n",data->currentEntry);
     for(i=0;i<data->currentEntry;++i)
     {
         printf("Size:\t\t\t%ld\nOffset:\t\t\t%ld\n",data->MPentry[i].size,data->MPentry[i].offset);
@@ -167,12 +167,20 @@ MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
         break;
     /*Non mandatory*/
     default:
+        if(tag >>8 == 0xB0)
+        printf("----------------Ignoring Index IFD TAG : 0x%x----------------\n",tag);
+        else if(tag>>8 == 0xB1)
+        printf("-------------Ignoring Individual IFD TAG : 0x%x--------------\n",tag);
+        else if(tag>>8 == 0xB2)
+        printf("----------------Ignoring Attr IFD TAG : 0x%x-----------------\n",tag);
+        else
         printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
         break;
     }
     return read_bytes;
 }
-METHODDEF(boolean)
+
+boolean
 MPExtReadAPP02 (j_decompress_ptr cinfo)
 {
     int i=0;
@@ -183,7 +191,6 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
         .version={0},
     };
     int length;
-    unsigned int ch=0;
     length = jpeg_getc(cinfo) << 8;
     length += jpeg_getc(cinfo);
     printf( "APP02, length %d:\n",length);
@@ -223,9 +230,30 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
     }
     data.nextIFDOffset=jpeg_getint32(cinfo,endiannessSwap);
     length-=4;
-    MPExtReadValueIFD(cinfo,&data,endiannessSwap);
+    length-=MPExtReadValueIFD(cinfo,&data,endiannessSwap);
 
+
+    /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
+    //TODO : use offset (nextIFD of First IFD)
+    data.count_attr_IFD=jpeg_getint16(cinfo,endiannessSwap);
+    length-=2;
+    for(i=0;i<data.count_attr_IFD;++i)
+    {
+        //TODO: add parsing from attribute tags
+        length-=MPExtReadTag(cinfo,&data,endiannessSwap);
+    }
+    printf("bytes remaining : %d\n",length);
+    while(length-- >0)
+    {
+        printf("0x%.2x ",jpeg_getc(cinfo));
+    }
+    printf("\n");
     print_APP02_MPF(&data);
+
+
+
+
+
     /*****************************************************************************************/
     /************************************DONT FORGET IT !*************************************/
     /************************Will probably be moved somewhere else****************************/
@@ -239,163 +267,70 @@ MPExtReadAPP02 (j_decompress_ptr cinfo)
 
 
 
-METHODDEF(boolean)
-print_text_marker (j_decompress_ptr cinfo);
-
-
-
-void decompress_mpo(char* filename)
-{
-    FILE* in;
-    in=fopen(filename,"rb");
-    if(in)
-    {
-        printf("%s file opened.\n", filename);
-        fseek(in,0,SEEK_END);
-        long size = ftell(in);
-        rewind(in);
-        unsigned char * src_buffer=calloc(size,sizeof(*src_buffer));
-        if(src_buffer)
-        {
-            fread(src_buffer,size,sizeof(*src_buffer),in);
-            decompress_mpo_from_mem(src_buffer,size);
-
-            int index=0;
-            int i;
-            /*Quick and dirty hack to reach 2nd image*/
-            for(i=1; i<size-3; i++)
-            {
-                if(src_buffer[i] ==0xFF && src_buffer[i+1] ==0xD8
-                        && src_buffer[i+2] ==0xFF && src_buffer[i+3] ==0xE1)
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if(index)
-            {
-                printf("Second SOI offset : %d(0x%x)\n",index,index);
-                decompress_mpo_from_mem(src_buffer+index,size-index);
-            }
-            else printf("couldn't find second SOI marker.\n");
-
-            free(src_buffer);
-        }
-        fclose(in);
-    }
-
-}
-
-
-
-void decompress_mpo_from_mem(unsigned char* src_buffer,long size)
-{
-    struct jpeg_decompress_struct cinfo;
-    struct jpeg_error_mgr jerr;
-
-    JSAMPARRAY buffer; /*output*/
-
-    int row_stride;		/* physical row width in output buffer */
-
-
-
-    cinfo.err = jpeg_std_error(&jerr);
-    printf("Creating decompress object\n");
-
-    jpeg_create_decompress(&cinfo);
-    int i=3;
-    jpeg_set_marker_processor(&cinfo, JPEG_APP0+2, MPExtReadAPP02);
-
-    jpeg_mem_src(&cinfo, src_buffer,size);
-    printf("Reading header...\n");
-    jpeg_read_header(&cinfo, TRUE);
-    printf("Size of Jpeg buffer: %d(0x%x)\n",((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer,((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer);
-    printf("Starting decompression...\n");
-
-    jpeg_start_decompress(&cinfo);
-    printf("Image is of size %dx%d\n",cinfo.output_width,cinfo.output_height);
-    //The size of a line
-    row_stride = cinfo.output_width * cinfo.output_components;
-    /* Make a one-row-high sample array that will go away when done with image */
-    buffer = (*cinfo.mem->alloc_sarray)
-             ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-    while (cinfo.output_scanline < cinfo.output_height)
-    {
-        //printf("Reading line %d\n",cinfo.output_scanline);
-        jpeg_read_scanlines(&cinfo, buffer, 1);
-
-    }
-    printf("Finishing decompression...\n\n\n");
-    jpeg_finish_decompress(&cinfo);
-    jpeg_destroy_decompress(&cinfo);
-}
 
 
 
 
-
-
-METHODDEF(boolean)
-print_text_marker (j_decompress_ptr cinfo)
-{
-    boolean traceit = (cinfo->err->trace_level >= 1);
-    INT32 length;
-    unsigned int ch;
-    unsigned int lastch = 0;
-
-    length = jpeg_getc(cinfo) << 8;
-    length += jpeg_getc(cinfo);
-    length -= 2;			/* discount the length word itself */
-    if (traceit||1)
-    {
-        if (cinfo->unread_marker == JPEG_COM)
-            printf( "Comment, length %ld:\n", (long) length);
-        else			/* assume it is an APPn otherwise */
-            printf( "APP%d, length %ld:\n",
-                    cinfo->unread_marker - JPEG_APP0, (long) length);
-
-    }
-
-    while (--length >= 0)
-    {
-        ch = jpeg_getc(cinfo);
-        if (traceit)
-        {
-            /* Emit the character in a readable form.
-             * Nonprintables are converted to \nnn form,
-             * while \ is converted to \\.
-             * Newlines in CR, CR/LF, or LF form will be printed as one newline.
-             */
-            if (ch == '\r')
-            {
-                printf( "\n");
-            }
-            else if (ch == '\n')
-            {
-                if (lastch != '\r')
-                    printf( "\n");
-            }
-            else if (ch == '\\')
-            {
-                printf( "\\\\");
-            }
-            else if (isprint(ch))
-            {
-                printf("%c",ch);
-            }
-            else
-            {
-                printf( "\\%03o", ch);
-            }
-            lastch = ch;
-        }
-    }
-
-    if (traceit)
-        printf( "\n");
-
-    return TRUE;
-}
+//METHODDEF(boolean)
+//print_text_marker (j_decompress_ptr cinfo)
+//{
+//    boolean traceit = (cinfo->err->trace_level >= 1);
+//    INT32 length;
+//    unsigned int ch;
+//    unsigned int lastch = 0;
+//
+//    length = jpeg_getc(cinfo) << 8;
+//    length += jpeg_getc(cinfo);
+//    length -= 2;			/* discount the length word itself */
+//    if (traceit||1)
+//    {
+//        if (cinfo->unread_marker == JPEG_COM)
+//            printf( "Comment, length %ld:\n", (long) length);
+//        else			/* assume it is an APPn otherwise */
+//            printf( "APP%d, length %ld:\n",
+//                    cinfo->unread_marker - JPEG_APP0, (long) length);
+//
+//    }
+//
+//    while (--length >= 0)
+//    {
+//        ch = jpeg_getc(cinfo);
+//        if (traceit)
+//        {
+//            /* Emit the character in a readable form.
+//             * Nonprintables are converted to \nnn form,
+//             * while \ is converted to \\.
+//             * Newlines in CR, CR/LF, or LF form will be printed as one newline.
+//             */
+//            if (ch == '\r')
+//            {
+//                printf( "\n");
+//            }
+//            else if (ch == '\n')
+//            {
+//                if (lastch != '\r')
+//                    printf( "\n");
+//            }
+//            else if (ch == '\\')
+//            {
+//                printf( "\\\\");
+//            }
+//            else if (isprint(ch))
+//            {
+//                printf("%c",ch);
+//            }
+//            else
+//            {
+//                printf( "\\%03o", ch);
+//            }
+//            lastch = ch;
+//        }
+//    }
+//
+//    if (traceit)
+//        printf( "\n");
+//
+//    return TRUE;
+//}
 
 

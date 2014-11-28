@@ -106,14 +106,33 @@ typedef struct
     MPExt_MPEntryIndexFields EntryIndex;
     INT32 nextIFDOffset;
 
+    INT16 count_attr_IFD;
+
     MPExt_MPEntry* MPentry;
 }
 MPExt_Data;
 
+typedef struct
+{
+    MPExt_Data APP02;
+    struct jpeg_compress_struct cinfo;
+    JOCTET ** images_data;
+}
+mpo_compress_struct;
+
+
+typedef struct
+{
+    MPExt_Data APP02;
+    struct jpeg_decompress_struct cinfo;
+    JOCTET ** images_data;
+}
+mpo_decompress_struct;
 
 
 void decompress_mpo(char* filename);
 void decompress_mpo_from_mem(unsigned char* src,long size);
+boolean MPExtReadAPP02 (j_decompress_ptr cinfo);
 
 
 
