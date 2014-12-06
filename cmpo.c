@@ -1,147 +1,382 @@
 #include "include/mpo.h"
 #include "icon.h"
+#include <assert.h>
 
-typedef struct {
-  struct jpeg_destination_mgr pub; /* public fields */
+typedef struct
+{
+    struct jpeg_destination_mgr pub; /* public fields */
 
-  FILE * outfile;		/* target stream */
-  JOCTET * buffer;		/* start of buffer */
+    FILE * outfile;		/* target stream */
+    JOCTET * buffer;		/* start of buffer */
 } my_destination_mgr;
 
 typedef my_destination_mgr * my_dest_ptr;
 #define OUTPUT_BUF_SIZE  4096	/* choose an efficiently fwrite'able size */
 
 
-
-
-/*
- * Sample routine for JPEG compression.  We assume that the target file name
- * and a compression quality factor are passed in.
- */
-
-int image_width=320;
-int image_height=240;
-JSAMPLE * image_buffer=iconBitmap;
-
-GLOBAL(void)
-write_JPEG_file (char * filename, int quality)
+void mpo_init_write(MPExt_Data * data)
 {
-  /* This struct contains the JPEG compression parameters and pointers to
-   * working space (which is allocated as needed by the JPEG library).
-   * It is possible to have several such structures, representing multiple
-   * compression/decompression processes, in existence at once.  We refer
-   * to any one struct (and its associated working data) as a "JPEG object".
-   */
-  struct jpeg_compress_struct cinfo;
-  /* This struct represents a JPEG error handler.  It is declared separately
-   * because applications often want to supply a specialized error handler
-   * (see the second half of this file for an example).  But here we just
-   * take the easy way out and use the standard error handler, which will
-   * print a message on stderr and call exit() if compression fails.
-   * Note that this struct must live as long as the main JPEG parameter
-   * struct, to avoid dangling-pointer problems.
-   */
-  struct jpeg_error_mgr jerr;
-  /* More stuff */
-  FILE * outfile;		/* target file */
-  JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
-  int row_stride;		/* physical row width in image buffer */
+    /*Everything should be set to when entering here*/
+    data->MPF_identifier[0]='M';
+    data->MPF_identifier[1]='P';
+    data->MPF_identifier[2]='F';
+    data->MPF_identifier[3]=0;
+    if(isLittleEndian())
+        data->byte_order=LITTLE_ENDIAN;
+    else    data->byte_order=BIG_ENDIAN;
 
-  /* Step 1: allocate and initialize JPEG compression object */
+    data->first_IFD_offset=8;
 
-  /* We have to set up the error handler first, in case the initialization
-   * step fails.  (Unlikely, but it could happen if you are out of memory.)
-   * This routine fills in the contents of struct jerr, and returns jerr's
-   * address which we place into the link field in cinfo.
-   */
-  cinfo.err = jpeg_std_error(&jerr);
-  /* Now we can initialize the JPEG compression object. */
-  jpeg_create_compress(&cinfo);
-
-  /* Step 2: specify data destination (eg, a file) */
-  /* Note: steps 2 and 3 can be done in either order. */
-
-  /* Here we use the library-supplied code to send compressed data to a
-   * stdio stream.  You can also write your own code to do something else.
-   * VERY IMPORTANT: use "b" option to fopen() if you are on a machine that
-   * requires it in order to write binary files.
-   */
-  if ((outfile = fopen(filename, "wb")) == NULL) {
-    fprintf(stderr, "can't open %s\n", filename);
-    exit(1);
-  }
-  jpeg_stdio_dest(&cinfo, outfile);
-  /* Step 3: set parameters for compression */
-
-  /* First we supply a description of the input image.
-   * Four fields of the cinfo struct must be filled in:
-   */
-  cinfo.image_width = image_width; 	/* image width and height, in pixels */
-  cinfo.image_height = image_height;
-  cinfo.input_components = 3;		/* # of color components per pixel */
-  cinfo.in_color_space = JCS_RGB; 	/* colorspace of input image */
-  /* Now use the library's routine to set default compression parameters.
-   * (You must set at least cinfo.in_color_space before calling this,
-   * since the defaults depend on the source color space.)
-   */
-  jpeg_set_defaults(&cinfo);
-  /* Now you can set any non-default parameters you wish to.
-   * Here we just illustrate the use of quality (quantization table) scaling:
-   */
-  jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
-
-  /* Step 4: Start compressor */
-
-  /* TRUE ensures that we will write a complete interchange-JPEG file.
-   * Pass TRUE unless you are very sure of what you're doing.
-   */
-  jpeg_start_compress(&cinfo, TRUE);
-
-  /* Step 5: while (scan lines remain to be written) */
-  /*           jpeg_write_scanlines(...); */
-
-  /* Here we use the library's state variable cinfo.next_scanline as the
-   * loop counter, so that we don't have to keep track ourselves.
-   * To keep things simple, we pass one scanline per call; you can pass
-   * more if you wish, though.
-   */
+    data->version[0]='0';
+    data->version[1]='1';
+    data->version[2]='0';
+    data->version[3]='0';
 
 
-  printf("--------ftell=%d\n",ftell(((my_dest_ptr)cinfo.dest)->outfile));
-  printf("--------=%d\n",OUTPUT_BUF_SIZE-cinfo.dest->free_in_buffer);
-  jpeg_write_marker(&cinfo,JPEG_APP0+2,"MPF",4);
-  printf("--------ftell=%d\n",ftell(((my_dest_ptr)cinfo.dest)->outfile));
-  printf("--------=%d\n",OUTPUT_BUF_SIZE-cinfo.dest->free_in_buffer);
-
-
-  row_stride = image_width * 3;	/* JSAMPLEs per row in image_buffer */
-
-  while (cinfo.next_scanline < cinfo.image_height) {
-    /* jpeg_write_scanlines expects an array of pointers to scanlines.
-     * Here the array is only one element long, but you could pass
-     * more than one scanline at a time if that's more convenient.
-     */
-    row_pointer[0] = & image_buffer[cinfo.next_scanline * row_stride];
-    (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
-
-
-  }
-  printf("--------ftell=%d\n",ftell(((my_dest_ptr)cinfo.dest)->outfile));
-  printf("--------=%d\n",cinfo.dest->free_in_buffer);
-
-  /* Step 6: Finish compression */
-
-  jpeg_finish_compress(&cinfo);
-  printf("--------ftell=%d\n",ftell(((my_dest_ptr)cinfo.dest)->outfile));
-  printf("--------=%d\n",cinfo.dest->free_in_buffer);
-  /* After finish_compress, we can close the output file. */
-  fclose(outfile);
-
-  /* Step 7: release JPEG compression object */
-
-  /* This is an important step since it will release a good deal of memory. */
-  jpeg_destroy_compress(&cinfo);
-
-  /* And we're done! */
+    data->count=3;//Number of tags
+    data->EntryIndex.type=07;
+    data->EntryIndex.EntriesTabLength=data->numberOfImages*16;
+    data->EntryIndex.FirstEntryOffset=50/*End of MPentry*/
+                                      +0*12/*Individual unique ID List ?*/
+                                      +0*12/*Total number of captured frames*/;
+    data->nextIFDOffset=data->EntryIndex.FirstEntryOffset
+                        +data->EntryIndex.EntriesTabLength/*Starts right after Value Index IFD*/;
 }
 
+
+void mpo_init_compress(mpo_compress_struct* mpoinfo,int numberOfImages)
+{
+    int i;
+    mpoinfo->images_data=calloc(numberOfImages,sizeof(JOCTET*));
+    mpoinfo->APP02.numberOfImages=numberOfImages;
+    mpoinfo->APP02.MPentry=calloc(numberOfImages,sizeof(MPExt_MPEntry));
+    mpoinfo->cinfo=calloc(numberOfImages,sizeof(struct jpeg_compress_struct));
+    if(mpoinfo->cinfo)
+        for(i=0; i<numberOfImages; ++i)
+        {
+            jpeg_create_compress(&mpoinfo->cinfo[i]);
+        }
+    mpo_init_write(&mpoinfo->APP02);
+}
+
+
+void mpo_destroy_compress(mpo_compress_struct* mpoinfo)
+{
+    int i;
+    if(mpoinfo->cinfo)
+        for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+        {
+            jpeg_destroy_compress(&mpoinfo->cinfo[i]);
+        }
+    if(mpoinfo->cinfo)free(mpoinfo->cinfo);
+    mpoinfo->cinfo=NULL;
+
+    if(mpoinfo->APP02.MPentry)free(mpoinfo->APP02.MPentry);
+    mpoinfo->APP02.MPentry=NULL;
+    if(mpoinfo->images_data)free(mpoinfo->images_data);
+    mpoinfo->images_data=NULL;
+}
+
+/** \brief Tell mpoinfo struct what source to use
+ *
+ * \param imageNumber   The index of the image we are working on
+ * \param data          An array of data, shall be freed by the user
+ * \param width         Image's width in pixels
+ * \param height        Image's height in pixels
+ *
+ */
+
+void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,unsigned char src[])
+{
+    mpoinfo->images_data[imageNumber]=src;
+}
+
+/** \brief Convenience function to set width and height of all images at once
+*/
+void mpo_dimensions_forall(mpo_compress_struct* mpoinfo,int width,int height)
+{
+    int i;
+    for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+    {
+        mpoinfo->cinfo[i].image_width=width;
+        mpoinfo->cinfo[i].image_height=height;
+    }
+}
+
+/** \brief Convenience function to set colorspace info of all images at once
+*/
+void mpo_colorspace_forall(mpo_compress_struct* mpoinfo,J_COLOR_SPACE jcs,int input_components)
+{
+    int i;
+    for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+    {
+        mpoinfo->cinfo[i].input_components = input_components;		/* # of color components per pixel */
+        mpoinfo->cinfo[i].in_color_space = jcs; 	/* colorspace of input image */
+    }
+}
+
+
+/** \brief Convenience function to set quality of all images at once
+*/
+void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality)
+{
+    int i;
+    for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+    {
+        jpeg_set_quality(&mpoinfo->cinfo[i], quality, TRUE );
+    }
+}
+
+
+void jpeg_write_m_int16(j_compress_ptr cinfo,INT16 value)
+{
+    jpeg_write_m_byte(cinfo,value&0x00FF);
+    jpeg_write_m_byte(cinfo,value>>8 &0x00FF);
+}
+
+void jpeg_write_m_int32(j_compress_ptr cinfo,INT32 value)
+{
+    jpeg_write_m_byte(cinfo,value&0x000000FF);
+    jpeg_write_m_byte(cinfo,(value>>8) &0x000000FF);
+    jpeg_write_m_byte(cinfo,(value>>16) &0x000000FF);
+    jpeg_write_m_byte(cinfo,(value>>24) &0x000000FF);
+}
+
+void jpeg_write_m_bytes(j_compress_ptr cinfo,unsigned char *value,unsigned int length)
+{
+    unsigned int i;
+    for(i=0; i<length; ++i)
+        jpeg_write_m_byte(cinfo,value[i]);
+}
+
+
+int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,unsigned char *value, int count)
+{
+    int i;
+    jpeg_write_m_int16(cinfo,MP_UNDEFINED);
+    jpeg_write_m_int32(cinfo,count);
+    for(i=0; i<count; ++i)
+        jpeg_write_m_byte(cinfo,value[i]);
+    return 2+4+count;
+
+}
+
+
+
+int jpeg_write_m_LONG(j_compress_ptr cinfo,INT32 *value, int count)
+{
+    int i;
+    jpeg_write_m_int16(cinfo,MP_LONG);
+    jpeg_write_m_int32(cinfo,count);
+    for(i=0; i<count; ++i)
+        jpeg_write_m_int32(cinfo,value[i]);
+    return 2+4+4*count;
+}
+
+
+
+
+int mpo_write_MPExtTag (j_compress_ptr cinfo,MPExt_Data *data,MPExt_MPTags tag)
+{
+    jpeg_write_m_int16(cinfo,tag);
+    int bytes_written=2;
+
+    switch(tag)
+    {
+    case MPTag_MPFVersion :
+        bytes_written+=jpeg_write_m_UNDEFINED(cinfo,(unsigned char *)data->version,4);
+        break;
+    case MPTag_NumberOfImages :
+        bytes_written+=jpeg_write_m_LONG(cinfo,&data->numberOfImages,1);
+        break;
+    case MPTag_MPEntry:
+        jpeg_write_m_int16(cinfo,data->EntryIndex.type);/*Type? 07 = undefined?*/
+        jpeg_write_m_int32(cinfo,data->EntryIndex.EntriesTabLength);
+        jpeg_write_m_int32(cinfo,data->EntryIndex.FirstEntryOffset);
+        bytes_written+=2+4+4;
+        break;
+    /*Non mandatory*/
+    default:
+        if(tag >>8 == 0xB0)
+            printf("----------------Ignoring Index IFD TAG : 0x%x----------------\n",tag);
+        else if(tag>>8 == 0xB1)
+            printf("-------------Ignoring Individual IFD TAG : 0x%x--------------\n",tag);
+        else if(tag>>8 == 0xB2)
+            printf("----------------Ignoring Attr IFD TAG : 0x%x-----------------\n",tag);
+        else
+            printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
+        break;
+    }
+    return bytes_written;
+}
+
+
+int mpo_write_MPExt_ValueIFD (j_compress_ptr cinfo,MPExt_Data *data)
+{
+    for(data->currentEntry=0; data->currentEntry < data->numberOfImages; data->currentEntry++)
+    {
+        jpeg_write_m_int32(cinfo,
+                           data->MPentry[data->currentEntry].individualImgAttr.value);
+        jpeg_write_m_int32(cinfo,
+                           data->MPentry[data->currentEntry].size);
+        jpeg_write_m_int32(cinfo,
+                           data->MPentry[data->currentEntry].offset);
+        jpeg_write_m_int16(cinfo,
+                           data->MPentry[data->currentEntry].dependentImageEntry1);
+        jpeg_write_m_int16(cinfo,
+                           data->MPentry[data->currentEntry].dependentImageEntry2);
+    }
+    return (4+4+4+2+2)*data->numberOfImages;
+}
+
+
+
+int mpo_write_MPExt_IndexIFD (mpo_compress_struct * mpoinfo)
+{
+    int bytes_written=0;
+    j_compress_ptr cinfo=&mpoinfo->cinfo[0];
+    jpeg_write_m_int16(cinfo,mpoinfo->APP02.count);
+    bytes_written+=2;
+    bytes_written+=mpo_write_MPExtTag(cinfo,&mpoinfo->APP02,MPTag_MPFVersion);
+    bytes_written+=mpo_write_MPExtTag(cinfo,&mpoinfo->APP02,MPTag_NumberOfImages);
+    bytes_written+=mpo_write_MPExtTag(cinfo,&mpoinfo->APP02,MPTag_MPEntry);
+    jpeg_write_m_int32(cinfo,mpoinfo->APP02.nextIFDOffset);
+    bytes_written+=4;
+    bytes_written+=mpo_write_MPExt_ValueIFD(cinfo,&mpoinfo->APP02);
+    return bytes_written;
+}
+
+int mpo_write_MPExt_AttrIFD(mpo_compress_struct * mpoinfo)
+{
+    int bytes_written=0;
+    j_compress_ptr cinfo=&mpoinfo->cinfo[0];
+    jpeg_write_m_int16(cinfo,mpoinfo->APP02.count_attr_IFD);
+    bytes_written+=2;
+
+    /* ! EMPTY !*/
+    /* TODO : everything related to attributes */
+    return bytes_written;
+
+}
+
+long mpo_compute_MPExt_Data_size(mpo_compress_struct * mpoinfo, int image)
+{
+    long size=0;
+    size+=4;/*MPF_identifier*/
+    size+=4;/*byte_order*/
+    size+=4;/*first_IFD_offset*/
+
+    if(image==0)/*Write the Index IFD only for the first image*/
+    {
+        size+=2;//APP02.count
+        size+=2/*tag*/ + 2 /*type*/ +4/*count*/ + 4 /*data*/; //MPTag_MPFVersion
+        size+=2/*tag*/ + 2 /*type*/ +4/*count*/ + 4 /*data*/; //MPTag_NumberOfImages
+        size+=2/*tag*/ + 2 /*type*/ +4/*EntriesTabLength*/ + 4 /*FirstEntryOffset*/; //MPTag_MPEntry
+        size+=4;//nextIFDOffset
+        size+=16*mpoinfo->APP02.numberOfImages;
+    }
+    size+=2;//mpo_write_MPExt_AttrIFD
+    return size;
+}
+
+
+
+void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image)
+{
+    int length=0;
+    int i;
+    j_compress_ptr cinfo=&mpoinfo->cinfo[image];
+    jpeg_write_m_header(cinfo,JPEG_APP0+2,mpo_compute_MPExt_Data_size(mpoinfo,image));
+
+
+    for (i=0; i<4 ; ++i )
+    {
+        jpeg_write_m_byte(cinfo,mpoinfo->APP02.MPF_identifier[i]);
+        length++;
+    }
+    jpeg_write_m_byte(cinfo,mpoinfo->APP02.byte_order>>24);
+    length++;
+    jpeg_write_m_byte(cinfo,mpoinfo->APP02.byte_order>>16);
+    length++;
+    jpeg_write_m_byte(cinfo,mpoinfo->APP02.byte_order>>8);
+    length++;
+    jpeg_write_m_byte(cinfo,mpoinfo->APP02.byte_order);
+    length++;
+
+    jpeg_write_m_int32(cinfo,mpoinfo->APP02.first_IFD_offset);
+    length+=4;
+
+    if(image==0)/*Write the Index IFD only for the first image*/
+    {
+        length+=mpo_write_MPExt_IndexIFD(mpoinfo);
+    }
+
+    length+=mpo_write_MPExt_AttrIFD(mpoinfo);
+
+
+
+    printf("bytes wrote = %d | Computed size = %ld \n",length,mpo_compute_MPExt_Data_size(mpoinfo,image));
+    assert(length==mpo_compute_MPExt_Data_size(mpoinfo,image));
+
+}
+
+
+
+
+
+GLOBAL(void)
+mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
+{
+    int i;
+
+    struct jpeg_error_mgr jerr;
+    /* More stuff */
+    FILE * outfile;		/* target file */
+    JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
+    int row_stride;		/* physical row width in image buffer */
+
+
+    if ((outfile = fopen(filename, "wb")) == NULL)
+    {
+        fprintf(stderr, "can't open %s\n", filename);
+        exit(1);
+    }
+    for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+    {
+        mpoinfo->cinfo[i].err = jpeg_std_error(&jerr);
+
+        jpeg_stdio_dest(&mpoinfo->cinfo[i], outfile);
+
+        jpeg_set_defaults(&mpoinfo->cinfo[i]);
+        mpoinfo->cinfo[i].write_JFIF_header=0;
+        mpoinfo->cinfo[i].write_Adobe_marker=0;
+
+        jpeg_start_compress(&mpoinfo->cinfo[i], TRUE);
+
+        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
+        printf("--------=%d\n",OUTPUT_BUF_SIZE-mpoinfo->cinfo[i].dest->free_in_buffer);
+        mpo_write_MPO_Marker(mpoinfo,i);
+        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
+        printf("--------=%d\n",OUTPUT_BUF_SIZE-mpoinfo->cinfo[i].dest->free_in_buffer);
+
+
+        row_stride = mpoinfo->cinfo[i].image_width * 3;	/* JSAMPLEs per row in image_buffer */
+
+        while (mpoinfo->cinfo[i].next_scanline < mpoinfo->cinfo[i].image_height)
+        {
+            row_pointer[0] = & mpoinfo->images_data[i][mpoinfo->cinfo[i].next_scanline * row_stride];
+            (void) jpeg_write_scanlines(&mpoinfo->cinfo[i], row_pointer, 1);
+        }
+        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
+        printf("--------=%d\n",mpoinfo->cinfo[i].dest->free_in_buffer);
+
+        /* Step 6: Finish compression */
+
+        jpeg_finish_compress(&mpoinfo->cinfo[i]);
+        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
+        printf("--------=%d\n",mpoinfo->cinfo[i].dest->free_in_buffer);
+        /* After finish_compress, we can close the output file. */
+    }
+    fclose(outfile);
+
+}

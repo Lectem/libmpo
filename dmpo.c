@@ -15,7 +15,7 @@ void decompress_mpo(char* filename)
         if(src_buffer)
         {
             fread(src_buffer,size,sizeof(*src_buffer),in);
-            decompress_mpo_from_mem(src_buffer,size);
+            decompress_mpo_from_mem(src_buffer,size,1);
 
             int index=0;
             int i;
@@ -32,7 +32,7 @@ void decompress_mpo(char* filename)
             if(index)
             {
                 printf("Second SOI offset : %d(0x%x)\n",index,index);
-                //decompress_mpo_from_mem(src_buffer+index,size-index);
+                decompress_mpo_from_mem(src_buffer+index,size-index,0);
             }
             else printf("couldn't find second SOI marker.\n");
 
@@ -45,7 +45,7 @@ void decompress_mpo(char* filename)
 
 
 
-void decompress_mpo_from_mem(unsigned char* src_buffer,long size)
+void decompress_mpo_from_mem(unsigned char* src_buffer,long size,int isFirstImage)
 {
     struct jpeg_decompress_struct cinfo;
     struct jpeg_error_mgr jerr;
@@ -60,34 +60,26 @@ void decompress_mpo_from_mem(unsigned char* src_buffer,long size)
     printf("Creating decompress object\n");
 
     jpeg_create_decompress(&cinfo);
-    jpeg_set_marker_processor(&cinfo, JPEG_APP0+2, MPExtReadAPP02);
+
 
     jpeg_mem_src(&cinfo, src_buffer,size);
-    int i;
-    for(i=0;i<2;i++)
-    {    printf("Reading header...\n");
+        printf("Reading header...\n");
+        jpeg_set_marker_processor(&cinfo, JPEG_APP0+2,isFirstImage?MPExtReadAPP02AsFirstImage:MPExtReadAPP02);
+        jpeg_read_header(&cinfo, TRUE);
+        printf("Size of Jpeg buffer: %d(0x%x)\n",((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer,((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer);
+        printf("Starting decompression...\n");
+        jpeg_start_decompress(&cinfo);
+        printf("Image is of size %dx%d\n",cinfo.output_width,cinfo.output_height);
+        row_stride = cinfo.output_width * cinfo.output_components;
+        buffer = (*cinfo.mem->alloc_sarray)
+                 ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-    jpeg_read_header(&cinfo, TRUE);
-    printf("Size of Jpeg buffer: %d(0x%x)\n",((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer,((struct jpeg_source_mgr*)cinfo.src)->bytes_in_buffer);
-    printf("Starting decompression...\n");
+        while (cinfo.output_scanline < cinfo.output_height)
+        {
+            jpeg_read_scanlines(&cinfo, buffer, 1);
 
-    jpeg_start_decompress(&cinfo);
-    printf("Image is of size %dx%d\n",cinfo.output_width,cinfo.output_height);
-    //The size of a line
-    row_stride = cinfo.output_width * cinfo.output_components;
-    /* Make a one-row-high sample array that will go away when done with image */
-    buffer = (*cinfo.mem->alloc_sarray)
-             ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-    while (cinfo.output_scanline < cinfo.output_height)
-    {
-        //printf("Reading line %d\n",cinfo.output_scanline);
-        jpeg_read_scanlines(&cinfo, buffer, 1);
-
-    }
-    printf("Finishing decompression...\n\n\n");
-    jpeg_finish_decompress(&cinfo);
-    //cinfo.src->next_input_byte=src_buffer+36180;
-    }
+        }
+        printf("Finishing decompression...\n\n\n");
+        jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
 }

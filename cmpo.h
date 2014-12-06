@@ -1,0 +1,41 @@
+/**
+ * \file
+ * \brief
+ * \author Lectem
+ */
+
+
+#pragma once
+
+
+void mpo_init_compress(mpo_compress_struct* mpoinfo,int numberOfImages);
+
+void mpo_destroy_compress(mpo_compress_struct* mpoinfo);
+
+/** \brief Tell mpoinfo struct what source to use
+ *
+ * \param imageNumber   The index of the image we are working on
+ * \param data          An array of data, shall be freed by the user
+ * \param width         Image's width in pixels
+ * \param height        Image's height in pixels
+ *
+ */
+void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,unsigned char src[]);
+
+/** \brief Convenience function to set width and height of all images at once
+*/
+void mpo_dimensions_forall(mpo_compress_struct* mpoinfo,int width,int height);
+
+/** \brief Convenience function to set colorspace info of all images at once
+*/
+void mpo_colorspace_forall(mpo_compress_struct* mpoinfo,J_COLOR_SPACE jcs,int input_components);
+
+/** \brief Convenience function to set quality of all images at once
+*/
+void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality);
+
+GLOBAL(void)
+mpo_write_file (mpo_compress_struct* mpoinfo,char * filename);
+
+void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image);
+
