@@ -1,27 +1,27 @@
-libmpo
+#libmpo
 
 A future library to decode and encode MPO (multiple picture object) files.
 Those are used mainly for 3D cameras and the Nintendo 3DS.
 
 
-Main goal :
+##Main goal :
 - Load / Write 3D images (Multi-frame Disparity) through libjpeg.
 - Give others enough material to work with as the standard isn't clear on some points(especially for the Index IFD)
 
 
-Currently working :
+###Currently working :
 - MPF Index IFD parsing
 
-Partially working :
+###Partially working :
 
 - Simple Multi-frame Disparity MPO file compression
 
 
-Requirements :
+##Requirements :
 - libjpeg8 or later
 
 
-TODO (In *order* of priority):
+##TODO (In *order* of priority):
 - Compression : Update Index IFD with images lengths and offsets
 - Give a good interface for compression and decompression
 - Attribute IFD support
@@ -31,8 +31,8 @@ TODO (In *order* of priority):
 - Everything else
 
 
-Will not be done :
+##Will not be done :
 - Exif and other markers support (you will be able to write/read it trough your own handlers)
 
-Might not be done :
+###Might not be done :
 - MPO files with other type than Multi-frame Disparity
