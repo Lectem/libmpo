@@ -20,6 +20,7 @@ int main()
 
     mpo_image_mem_src(&mpoinfo,0,iconBitmap);
     mpo_image_mem_src(&mpoinfo,1,iconBitmap);
+    mpo_type_forall(&mpoinfo,MPType_MultiFrame_Disparity);//This is the type for 3D images
 
     mpo_write_file(&mpoinfo,"test.mpo");
     //Writes the mpo file WITHOUT exif

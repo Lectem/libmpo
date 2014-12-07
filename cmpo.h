@@ -34,6 +34,11 @@ void mpo_colorspace_forall(mpo_compress_struct* mpoinfo,J_COLOR_SPACE jcs,int in
 */
 void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality);
 
+/** \brief Convenience function to set type of all images at once
+*/
+void mpo_type_forall(mpo_compress_struct* mpoinfo,MPExt_MPType type);
+
+
 GLOBAL(void)
 mpo_write_file (mpo_compress_struct* mpoinfo,char * filename);
 

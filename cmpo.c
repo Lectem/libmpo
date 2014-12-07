@@ -1,5 +1,7 @@
 #include "include/mpo.h"
+#include "cmpo.h"
 #include "icon.h"
+
 #include <assert.h>
 
 typedef struct
@@ -47,6 +49,11 @@ void mpo_init_write(MPExt_Data * data)
 void mpo_init_compress(mpo_compress_struct* mpoinfo,int numberOfImages)
 {
     int i;
+    //could use memset, but would need to include string.h
+    for(i=0;i<(long)sizeof(*mpoinfo);++i)
+    {
+        *((unsigned char*)mpoinfo+i)=0;
+    }
     mpoinfo->images_data=calloc(numberOfImages,sizeof(JOCTET*));
     mpoinfo->APP02.numberOfImages=numberOfImages;
     mpoinfo->APP02.MPentry=calloc(numberOfImages,sizeof(MPExt_MPEntry));
@@ -57,6 +64,9 @@ void mpo_init_compress(mpo_compress_struct* mpoinfo,int numberOfImages)
             jpeg_create_compress(&mpoinfo->cinfo[i]);
         }
     mpo_init_write(&mpoinfo->APP02);
+    mpo_type_forall(mpoinfo,MPType_Baseline);
+    if(numberOfImages>=1)mpoinfo->APP02.MPentry[0].individualImgAttr.data.representativeImage=1;
+
 }
 
 
@@ -124,6 +134,18 @@ void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality)
     for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
     {
         jpeg_set_quality(&mpoinfo->cinfo[i], quality, TRUE );
+    }
+}
+
+/** \brief Convenience function to set type of all images at once
+*/
+void mpo_type_forall(mpo_compress_struct* mpoinfo,MPExt_MPType type)
+{
+
+    int i;
+    for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
+    {
+        mpoinfo->APP02.MPentry[i].individualImgAttr.data.MPTypeCode=type;
     }
 }
 
@@ -217,6 +239,7 @@ int mpo_write_MPExt_ValueIFD (j_compress_ptr cinfo,MPExt_Data *data)
     {
         jpeg_write_m_int32(cinfo,
                            data->MPentry[data->currentEntry].individualImgAttr.value);
+        printf("#######0x%x\n",data->MPentry[data->currentEntry].individualImgAttr.value);
         jpeg_write_m_int32(cinfo,
                            data->MPentry[data->currentEntry].size);
         jpeg_write_m_int32(cinfo,
@@ -236,6 +259,8 @@ int mpo_write_MPExt_IndexIFD (mpo_compress_struct * mpoinfo)
     int bytes_written=0;
     j_compress_ptr cinfo=&mpoinfo->cinfo[0];
     jpeg_write_m_int16(cinfo,mpoinfo->APP02.count);
+        printf("mpoinfo->APP02.count=%d\n",mpoinfo->APP02.count);
+
     bytes_written+=2;
     bytes_written+=mpo_write_MPExtTag(cinfo,&mpoinfo->APP02,MPTag_MPFVersion);
     bytes_written+=mpo_write_MPExtTag(cinfo,&mpoinfo->APP02,MPTag_NumberOfImages);
@@ -246,10 +271,10 @@ int mpo_write_MPExt_IndexIFD (mpo_compress_struct * mpoinfo)
     return bytes_written;
 }
 
-int mpo_write_MPExt_AttrIFD(mpo_compress_struct * mpoinfo)
+int mpo_write_MPExt_AttrIFD(mpo_compress_struct * mpoinfo, int i)
 {
     int bytes_written=0;
-    j_compress_ptr cinfo=&mpoinfo->cinfo[0];
+    j_compress_ptr cinfo=&mpoinfo->cinfo[i];
     jpeg_write_m_int16(cinfo,mpoinfo->APP02.count_attr_IFD);
     bytes_written+=2;
 
@@ -311,7 +336,7 @@ void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image)
         length+=mpo_write_MPExt_IndexIFD(mpoinfo);
     }
 
-    length+=mpo_write_MPExt_AttrIFD(mpoinfo);
+    length+=mpo_write_MPExt_AttrIFD(mpoinfo,image);
 
 
 
@@ -321,7 +346,11 @@ void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image)
 }
 
 
-
+inline long mpotell(mpo_compress_struct* mpoinfo,int image)
+{
+    return ftell(((my_dest_ptr)mpoinfo->cinfo[image].dest)->outfile)+/*Current file offset*/
+                OUTPUT_BUF_SIZE-mpoinfo->cinfo[image].dest->free_in_buffer;/*Current buffer offset /!\ Wrong if buffer is flushed...*/
+}
 
 
 GLOBAL(void)
@@ -335,6 +364,7 @@ mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
     JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
     int row_stride;		/* physical row width in image buffer */
 
+    long first_image_MPF_offset_begin=0;
 
     if ((outfile = fopen(filename, "wb")) == NULL)
     {
@@ -347,14 +377,23 @@ mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
 
         jpeg_stdio_dest(&mpoinfo->cinfo[i], outfile);
 
+        if(i>0)
+        {
+            //Current offset is the absolute offset of the image to write
+            mpoinfo->APP02.MPentry[i].offset=ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile)-first_image_MPF_offset_begin;
+            printf("Image index in 1st image Index IFD:%ld\n",mpoinfo->APP02.MPentry[i].offset);
+        }
         jpeg_set_defaults(&mpoinfo->cinfo[i]);
         mpoinfo->cinfo[i].write_JFIF_header=0;
         mpoinfo->cinfo[i].write_Adobe_marker=0;
 
         jpeg_start_compress(&mpoinfo->cinfo[i], TRUE);
+        if(i==0)
+        {
+            first_image_MPF_offset_begin=mpotell(mpoinfo,i)+2+2+4;/*Begining will be 8 bytes later (starting at endianess)*/
+            printf("1st image MPF offset begin at=%ld\n",first_image_MPF_offset_begin);
+        }
 
-        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
-        printf("--------=%d\n",OUTPUT_BUF_SIZE-mpoinfo->cinfo[i].dest->free_in_buffer);
         mpo_write_MPO_Marker(mpoinfo,i);
         printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
         printf("--------=%d\n",OUTPUT_BUF_SIZE-mpoinfo->cinfo[i].dest->free_in_buffer);
@@ -373,10 +412,28 @@ mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
         /* Step 6: Finish compression */
 
         jpeg_finish_compress(&mpoinfo->cinfo[i]);
-        printf("--------ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
+        printf("---ftell=%ld\n",ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile));
         printf("--------=%d\n",mpoinfo->cinfo[i].dest->free_in_buffer);
-        /* After finish_compress, we can close the output file. */
+        mpoinfo->APP02.MPentry[i].size= ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile)
+                                        - (mpoinfo->APP02.MPentry[i].offset);
+        if(i>0)mpoinfo->APP02.MPentry[i].size-=first_image_MPF_offset_begin;
+
+        while(ftell(outfile)%16)//Align Image offset as a multiple of 16
+            fputc(0,outfile);
     }
+
+    /***************************************
+    ******** Update the Index table*********
+    ****************************************/
+    fseek(outfile,first_image_MPF_offset_begin,SEEK_SET);
+    fseek(outfile,mpoinfo->APP02.EntryIndex.FirstEntryOffset+4,SEEK_CUR);
+    for(i=0;i<mpoinfo->APP02.numberOfImages;++i)
+    {
+        fwrite(&mpoinfo->APP02.MPentry[i].size,sizeof(INT32),1,outfile);
+        fwrite(&mpoinfo->APP02.MPentry[i].offset,sizeof(INT32),1,outfile);
+        fseek(outfile,8,SEEK_CUR);
+    }
+
     fclose(outfile);
 
 }
