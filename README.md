@@ -10,7 +10,10 @@ Those are used mainly for 3D cameras and the Nintendo 3DS.
 
 
 ###Currently working :
-- MPF Index IFD parsing
+- Basic compression
+- Compression of 3d stereo files, compatible with Nintendo 3DS and NVidia 3D viewer.
+  Look at the example for more details
+
 
 ###Partially working :
 
