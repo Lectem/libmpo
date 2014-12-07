@@ -301,6 +301,10 @@ long mpo_compute_MPExt_Data_size(mpo_compress_struct * mpoinfo, int image)
         size+=16*mpoinfo->APP02.numberOfImages;
     }
     size+=2;//mpo_write_MPExt_AttrIFD
+        //Hotfix, simulates empty attr ifd....
+        size+=32*3+4;//TEST
+
+
     return size;
 }
 
@@ -337,6 +341,13 @@ void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image)
     }
 
     length+=mpo_write_MPExt_AttrIFD(mpoinfo,image);
+
+    //hotfix, simulate attr ifd
+    for(i=0;i<32*3+4;++i)
+    {
+        jpeg_write_m_byte(cinfo,0);
+        length++;
+    }
 
 
 

@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/mpo.h"
-#include "icon.h"
 #include "cmpo.h"
+
+
+extern unsigned char imageBytes_left[];
+extern unsigned char imageBytes_right[];
 
 int main()
 {
@@ -18,8 +21,8 @@ int main()
     mpo_dimensions_forall(&mpoinfo,image_width,image_height);
     mpo_colorspace_forall(&mpoinfo,JCS_RGB,3);
 
-    mpo_image_mem_src(&mpoinfo,0,iconBitmap);
-    mpo_image_mem_src(&mpoinfo,1,iconBitmap);
+    mpo_image_mem_src(&mpoinfo,0,imageBytes_left);
+    mpo_image_mem_src(&mpoinfo,1,imageBytes_right);
     mpo_type_forall(&mpoinfo,MPType_MultiFrame_Disparity);//This is the type for 3D images
 
     mpo_write_file(&mpoinfo,"test.mpo");
