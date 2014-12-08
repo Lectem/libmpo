@@ -61,7 +61,7 @@ void destroyMP_Data(MPExt_Data *data)
 
 boolean print_APP02_MPF (MPExt_Data *data)
 {
-    int i;
+    unsigned int i;
     if(data->MPF_identifier[0] != 'M'||
             data->MPF_identifier[1] != 'P'||
             data->MPF_identifier[2] != 'F'||
@@ -80,13 +80,13 @@ boolean print_APP02_MPF (MPExt_Data *data)
     printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
     printf("---MP Index IFD---\n");
     printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
-    printf("Number of images:\t%ld\n",data->numberOfImages);
-    if(data->currentEntry>0)printf("%ld entries listed\n",data->currentEntry);
+    printf("Number of images:\t%d\n",data->numberOfImages);
+    if(data->currentEntry>0)printf("%d entries listed\n",data->currentEntry);
 
     printf("----------\n");
     for(i=0; i<data->currentEntry; ++i)
     {
-        printf("\tSize:\t\t%ld\n\tOffset:\t\t%ld\n",data->MPentry[i].size,data->MPentry[i].offset);
+        printf("\tSize:\t\t%d\n\tOffset:\t\t%d\n",data->MPentry[i].size,data->MPentry[i].offset);
         printf("\tDepImageEntry1:\t%d\n",data->MPentry[i].dependentImageEntry1);
         printf("\tDepImageEntry2:\t%d\n",data->MPentry[i].dependentImageEntry2);
         if(data->MPentry[i].individualImgAttr.data.imgType == 0)printf("\tData format:\tJPEG\n");
@@ -271,7 +271,7 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
     data.first_IFD_offset=jpeg_getint32(cinfo,endiannessSwap);
     length-=4;
 
-    while(length > OFFSET_START - data.first_IFD_offset ) //While we didn't reach the IFD...
+    while(length > (int)( OFFSET_START - data.first_IFD_offset) ) //While we didn't reach the IFD...
     {
         jpeg_getc(cinfo);
         length--;
@@ -288,8 +288,8 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
 
     /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
     //TODO : use offset (nextIFD of First IFD)
-    assert( (isFirstImage && OFFSET_START-data.nextIFDOffset == length ) ||
-            OFFSET_START-data.first_IFD_offset == length);
+    assert( (isFirstImage && (int)(OFFSET_START-data.nextIFDOffset) == length ) ||
+            (int)(OFFSET_START-data.first_IFD_offset) == length);
     {
         data.count_attr_IFD=jpeg_getint16(cinfo,endiannessSwap);
         length-=2;

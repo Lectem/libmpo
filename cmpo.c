@@ -72,7 +72,7 @@ void mpo_init_compress(mpo_compress_struct* mpoinfo,int numberOfImages)
 
 void mpo_destroy_compress(mpo_compress_struct* mpoinfo)
 {
-    int i;
+    unsigned int i;
     if(mpoinfo->cinfo)
         for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
         {
@@ -105,7 +105,7 @@ void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,unsigned cha
 */
 void mpo_dimensions_forall(mpo_compress_struct* mpoinfo,int width,int height)
 {
-    int i;
+    unsigned int i;
     for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
     {
         mpoinfo->cinfo[i].image_width=width;
@@ -117,7 +117,7 @@ void mpo_dimensions_forall(mpo_compress_struct* mpoinfo,int width,int height)
 */
 void mpo_colorspace_forall(mpo_compress_struct* mpoinfo,J_COLOR_SPACE jcs,int input_components)
 {
-    int i;
+    unsigned int i;
     for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
     {
         mpoinfo->cinfo[i].input_components = input_components;		/* # of color components per pixel */
@@ -130,7 +130,7 @@ void mpo_colorspace_forall(mpo_compress_struct* mpoinfo,J_COLOR_SPACE jcs,int in
 */
 void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality)
 {
-    int i;
+    unsigned int i;
     for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
     {
         jpeg_set_quality(&mpoinfo->cinfo[i], quality, TRUE );
@@ -142,7 +142,7 @@ void mpo_quality_forall(mpo_compress_struct* mpoinfo,int quality)
 void mpo_type_forall(mpo_compress_struct* mpoinfo,MPExt_MPType type)
 {
 
-    int i;
+    unsigned int i;
     for(i=0; i<mpoinfo->APP02.numberOfImages; ++i)
     {
         mpoinfo->APP02.MPentry[i].individualImgAttr.data.MPTypeCode=type;
@@ -150,13 +150,13 @@ void mpo_type_forall(mpo_compress_struct* mpoinfo,MPExt_MPType type)
 }
 
 
-void jpeg_write_m_int16(j_compress_ptr cinfo,INT16 value)
+void jpeg_write_m_int16(j_compress_ptr cinfo,uint16_t value)
 {
     jpeg_write_m_byte(cinfo,value&0x00FF);
     jpeg_write_m_byte(cinfo,value>>8 &0x00FF);
 }
 
-void jpeg_write_m_int32(j_compress_ptr cinfo,INT32 value)
+void jpeg_write_m_int32(j_compress_ptr cinfo,uint32_t value)
 {
     jpeg_write_m_byte(cinfo,value&0x000000FF);
     jpeg_write_m_byte(cinfo,(value>>8) &0x000000FF);
@@ -164,7 +164,7 @@ void jpeg_write_m_int32(j_compress_ptr cinfo,INT32 value)
     jpeg_write_m_byte(cinfo,(value>>24) &0x000000FF);
 }
 
-void jpeg_write_m_bytes(j_compress_ptr cinfo,unsigned char *value,unsigned int length)
+void jpeg_write_m_bytes(j_compress_ptr cinfo,MPFByte *value,unsigned int length)
 {
     unsigned int i;
     for(i=0; i<length; ++i)
@@ -172,7 +172,7 @@ void jpeg_write_m_bytes(j_compress_ptr cinfo,unsigned char *value,unsigned int l
 }
 
 
-int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,unsigned char *value, int count)
+int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,MPFByte *value, int count)
 {
     int i;
     jpeg_write_m_int16(cinfo,MP_UNDEFINED);
@@ -185,7 +185,7 @@ int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,unsigned char *value, int count)
 
 
 
-int jpeg_write_m_LONG(j_compress_ptr cinfo,INT32 *value, int count)
+int jpeg_write_m_LONG(j_compress_ptr cinfo,MPFLong *value, int count)
 {
     int i;
     jpeg_write_m_int16(cinfo,MP_LONG);
@@ -196,6 +196,33 @@ int jpeg_write_m_LONG(j_compress_ptr cinfo,INT32 *value, int count)
 }
 
 
+
+int jpeg_write_m_RATIONAL(j_compress_ptr cinfo,MPFRational *value, int count)
+{
+    int i;
+    jpeg_write_m_int16(cinfo,MP_RATIONAL);
+    jpeg_write_m_int32(cinfo,count);
+    for(i=0; i<count; ++i)
+    {
+        jpeg_write_m_int32(cinfo,value[i].numerator);
+        jpeg_write_m_int32(cinfo,value[i].denominator);
+    }
+    return 0;
+}
+
+
+int jpeg_write_m_SRATIONAL(j_compress_ptr cinfo,MPFSRational *value, int count)
+{
+    int i;
+    jpeg_write_m_int16(cinfo,MP_SRATIONAL);
+    jpeg_write_m_int32(cinfo,count);
+    for(i=0; i<count; ++i)
+    {
+        jpeg_write_m_int32(cinfo,value[i].numerator);
+        jpeg_write_m_int32(cinfo,value[i].denominator);
+    }
+    return 0;
+}
 
 
 int mpo_write_MPExtTag (j_compress_ptr cinfo,MPExt_Data *data,MPExt_MPTags tag)
@@ -212,7 +239,7 @@ int mpo_write_MPExtTag (j_compress_ptr cinfo,MPExt_Data *data,MPExt_MPTags tag)
         bytes_written+=jpeg_write_m_LONG(cinfo,&data->numberOfImages,1);
         break;
     case MPTag_MPEntry:
-        jpeg_write_m_int16(cinfo,data->EntryIndex.type);/*Type? 07 = undefined?*/
+        jpeg_write_m_int16(cinfo,data->EntryIndex.type);/*Type 07 = undefined*/
         jpeg_write_m_int32(cinfo,data->EntryIndex.EntriesTabLength);
         jpeg_write_m_int32(cinfo,data->EntryIndex.FirstEntryOffset);
         bytes_written+=2+4+4;
@@ -239,7 +266,6 @@ int mpo_write_MPExt_ValueIFD (j_compress_ptr cinfo,MPExt_Data *data)
     {
         jpeg_write_m_int32(cinfo,
                            data->MPentry[data->currentEntry].individualImgAttr.value);
-        printf("#######0x%x\n",data->MPentry[data->currentEntry].individualImgAttr.value);
         jpeg_write_m_int32(cinfo,
                            data->MPentry[data->currentEntry].size);
         jpeg_write_m_int32(cinfo,
@@ -367,7 +393,7 @@ inline long mpotell(mpo_compress_struct* mpoinfo,int image)
 GLOBAL(void)
 mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
 {
-    int i;
+    unsigned int i;
 
     struct jpeg_error_mgr jerr;
     /* More stuff */
@@ -392,7 +418,7 @@ mpo_write_file (mpo_compress_struct* mpoinfo,char * filename)
         {
             //Current offset is the absolute offset of the image to write
             mpoinfo->APP02.MPentry[i].offset=ftell(((my_dest_ptr)mpoinfo->cinfo[i].dest)->outfile)-first_image_MPF_offset_begin;
-            printf("Image index in 1st image Index IFD:%ld\n",mpoinfo->APP02.MPentry[i].offset);
+            printf("Image index in 1st image Index IFD:%d\n",mpoinfo->APP02.MPentry[i].offset);
         }
         jpeg_set_defaults(&mpoinfo->cinfo[i]);
         mpoinfo->cinfo[i].write_JFIF_header=0;

@@ -7,7 +7,7 @@ Those are used mainly for 3D cameras and the Nintendo 3DS.
 ##Main goal :
 - Load / Write 3D images (Multi-frame Disparity) through libjpeg.
 - Give others enough material to work with as the standard isn't clear on some points(especially for the Index IFD)
-
+- No exif library needed
 
 ###Currently working :
 - Basic compression
