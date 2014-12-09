@@ -175,7 +175,7 @@ void jpeg_write_m_bytes(j_compress_ptr cinfo,MPFByte *value,unsigned int length)
 int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,MPFByte *value, int count)
 {
     int i;
-    jpeg_write_m_int16(cinfo,MP_UNDEFINED);
+    jpeg_write_m_int16(cinfo,MPF_UNDEFINED);
     jpeg_write_m_int32(cinfo,count);
     for(i=0; i<count; ++i)
         jpeg_write_m_byte(cinfo,value[i]);
@@ -188,7 +188,7 @@ int jpeg_write_m_UNDEFINED(j_compress_ptr cinfo,MPFByte *value, int count)
 int jpeg_write_m_LONG(j_compress_ptr cinfo,MPFLong *value, int count)
 {
     int i;
-    jpeg_write_m_int16(cinfo,MP_LONG);
+    jpeg_write_m_int16(cinfo,MPF_LONG);
     jpeg_write_m_int32(cinfo,count);
     for(i=0; i<count; ++i)
         jpeg_write_m_int32(cinfo,value[i]);
@@ -200,7 +200,7 @@ int jpeg_write_m_LONG(j_compress_ptr cinfo,MPFLong *value, int count)
 int jpeg_write_m_RATIONAL(j_compress_ptr cinfo,MPFRational *value, int count)
 {
     int i;
-    jpeg_write_m_int16(cinfo,MP_RATIONAL);
+    jpeg_write_m_int16(cinfo,MPF_RATIONAL);
     jpeg_write_m_int32(cinfo,count);
     for(i=0; i<count; ++i)
     {
@@ -214,7 +214,7 @@ int jpeg_write_m_RATIONAL(j_compress_ptr cinfo,MPFRational *value, int count)
 int jpeg_write_m_SRATIONAL(j_compress_ptr cinfo,MPFSRational *value, int count)
 {
     int i;
-    jpeg_write_m_int16(cinfo,MP_SRATIONAL);
+    jpeg_write_m_int16(cinfo,MPF_SRATIONAL);
     jpeg_write_m_int32(cinfo,count);
     for(i=0; i<count; ++i)
     {

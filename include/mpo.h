@@ -18,16 +18,16 @@
 /*Those are Exif types*/
 typedef enum
 {
-    MP_BYTE         = 1,/*8-bit unsigned integer*/
-    MP_ASCII        = 2,/*8-bit byte containing one 7-bit ASCII code.The final byte is terminated with NULL. */
-    MP_SHORT        = 3,/*16-bits unsigned integer*/
-    MP_LONG         = 4,/*32-bits integer*/
-    MP_RATIONAL     = 5,/*Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator. */
-    MP_UNDEFINED    = 7,
-    MP_SLONG        = 9,/*32-byte signed integer (2's complement notation).*/
-    MP_SRATIONAL    = 10 /*Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator. */
+    MPF_BYTE         = 1,/*8-bit unsigned integer*/
+    MPF_ASCII        = 2,/*8-bit byte containing one 7-bit ASCII code.The final byte is terminated with NULL. */
+    MPF_SHORT        = 3,/*16-bits unsigned integer*/
+    MPF_LONG         = 4,/*32-bits integer*/
+    MPF_RATIONAL     = 5,/*Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator. */
+    MPF_UNDEFINED    = 7,
+    MPF_SLONG        = 9,/*32-byte signed integer (2's complement notation).*/
+    MPF_SRATIONAL    = 10 /*Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator. */
 }
-MPVal_types;
+MPFVal_types;
 
 
 typedef uint8_t	        MPFByte;          /* 1 byte  */
@@ -43,8 +43,15 @@ typedef unsigned char	MPFUndefined;     /* 1 byte  */
 typedef struct {MPFSLong numerator; MPFSLong denominator;}
                         MPFSRational;
 
+typedef struct
+{
+    MPFByte * buffer;
+    long _cur;
+    long _size;
+}
+MPFbuffer;
 
-
+typedef MPFbuffer * MPFbuffer_ptr;
 
 /* See the DC-007_E Specification. */
 /* 5.2.2.1  Table 3, page 13 */
@@ -129,6 +136,30 @@ MPExt_MPEntry;
 
 typedef struct
 {
+    MPFLong IndividualNum;
+    MPFLong PanOrientation;
+    MPFRational PanOverlapH;
+    MPFRational PanOverlapV;
+    MPFLong BaseViewpointNum;
+    MPFSRational ConvergenceAngle;
+    MPFRational BaselineLength;
+    MPFSRational VerticalDivergence;
+    MPFSRational AxisDistanceX;
+    MPFSRational AxisDistanceY;
+    MPFSRational AxisDistanceZ;
+    MPFSRational YawAngle;
+    MPFSRational PitchAngle;
+    MPFSRational RollAngle;
+    boolean is_specified[MPTag_RollAngle-MPTag_IndividualNum+1];/*Set to true if the value has to be written/was present in the file*/
+    /*Use is_specified[TAG-MPTag_IndividualNum] to get the value*/
+}
+MPExt_ImageAttr;
+
+#define ATTR_IS_SPECIFIED(attr,tag) ((attr).is_specified[(tag)-MPTag_IndividualNum])
+
+
+typedef struct
+{
     MPFUndefined MPF_identifier[4];
     MPExt_ByteOrder byte_order;
     MPFLong first_IFD_offset;
@@ -143,6 +174,8 @@ typedef struct
     MPFShort count_attr_IFD;
 
     MPExt_MPEntry* MPentry;
+
+    MPExt_ImageAttr attributes;
 }
 MPExt_Data;
 

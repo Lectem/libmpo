@@ -24,33 +24,96 @@ unsigned int jpeg_getc (j_decompress_ptr cinfo)
     return GETJOCTET(*datasrc->next_input_byte++);
 }
 
-LOCAL(INT32)
-jpeg_getint16 (j_decompress_ptr cinfo, int swapEndian)
+
+long mpf_tell(MPFbuffer_ptr b)
 {
-    if(swapEndian)
-        return  jpeg_getc(cinfo)<<8 |
-                jpeg_getc(cinfo);
-    else
-        return  jpeg_getc(cinfo)|
-                jpeg_getc(cinfo)<<8;
+    return b->_cur;
 }
 
-INT32 jpeg_getint32 (j_decompress_ptr cinfo, int swapEndian)
+void mpf_seek(MPFbuffer_ptr b,long offset, int from)
+{
+    if(from==SEEK_CUR)b->_cur+=offset;
+    else if(from==SEEK_SET)b->_cur=offset;
+    else if(from==SEEK_END)b->_cur=b->_size-1+offset;
+}
+
+unsigned int mpf_getbyte (MPFbuffer_ptr b)
+/* Read next byte */
+{
+    assert(b->_cur <= b->_size);
+    return b->buffer[b->_cur++];
+}
+
+void mpf_dc_rewindc(MPFbuffer_ptr b)
+{
+    b->_cur--;
+}
+
+uint16_t mpf_getint16 (MPFbuffer_ptr b, int swapEndian)
 {
     if(swapEndian)
-        return  jpeg_getc(cinfo)<<24|
-                jpeg_getc(cinfo)<<16|
-                jpeg_getc(cinfo)<<8 |
-                jpeg_getc(cinfo);
+        return  mpf_getbyte(b)<<8 |
+                mpf_getbyte(b);
     else
-        return  jpeg_getc(cinfo)    |
-                jpeg_getc(cinfo)<<8 |
-                jpeg_getc(cinfo)<<16|
-                jpeg_getc(cinfo)<<24;
+        return  mpf_getbyte(b)|
+                mpf_getbyte(b)<<8;
+}
+
+uint32_t mpf_getint32 (MPFbuffer_ptr b, int swapEndian)
+{
+    if(swapEndian)
+        return  mpf_getbyte(b)<<24|
+                mpf_getbyte(b)<<16|
+                mpf_getbyte(b)<<8 |
+                mpf_getbyte(b);
+    else
+        return  mpf_getbyte(b)    |
+                mpf_getbyte(b)<<8 |
+                mpf_getbyte(b)<<16|
+                mpf_getbyte(b)<<24;
 }
 
 
-void destroyMP_Data(MPExt_Data *data)
+int mpf_getLONG(MPFLong * value, int count,MPFbuffer_ptr b,int swapEndian)
+{
+    int read_bytes=0;
+    read_bytes+=2;
+    assert(mpf_getint16(b,swapEndian)==MPF_LONG);
+    read_bytes+=4;
+    assert(mpf_getint32(b,swapEndian)==(uint32_t)count);
+    int i;
+    for(i=0;i<count;++i)
+    {
+        value[i]=mpf_getint32(b,swapEndian);
+        read_bytes+=4;
+    }
+    return read_bytes;
+}
+
+int mpf_getRATIONAL(MPFRational * value, int count,MPFbuffer_ptr b,int swapEndian)
+{
+    //TODO : USE THE OFFSET
+    int read_bytes=0;
+    read_bytes+=2;
+    MPFLong type=mpf_getint16(b,swapEndian);
+    assert(type==MPF_RATIONAL || type==MPF_SRATIONAL);
+    read_bytes+=4;
+    assert(mpf_getint32(b,swapEndian)==(uint32_t)count);
+    int i;
+    for(i=0;i<count;++i)
+    {
+        MPFLong offset=mpf_getint32(b,swapEndian);
+        read_bytes+=4;
+        long cur=mpf_tell(b);
+        mpf_seek(b,offset,SEEK_SET);
+        value[i].numerator=mpf_getint32(b,swapEndian);
+        value[i].denominator=mpf_getint32(b,swapEndian);
+        mpf_seek(b,cur,SEEK_SET);
+    }
+    return read_bytes;
+}
+
+void destroyMPF_Data(MPExt_Data *data)
 {
     if(data->MPentry)
     {
@@ -58,6 +121,20 @@ void destroyMP_Data(MPExt_Data *data)
         data->MPentry=NULL;
     }
 }
+
+void print_rational(MPFRational r)
+{
+    if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) printf("Unknown");
+    printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+}
+
+
+void print_srational(MPFSRational r)
+{
+    if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) printf("Unknown");
+    printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+}
+
 
 boolean print_APP02_MPF (MPExt_Data *data)
 {
@@ -119,6 +196,18 @@ boolean print_APP02_MPF (MPExt_Data *data)
         if(data->MPentry[i].individualImgAttr.data.dependentChild)printf("\tDependent child image\n");
         if(data->MPentry[i].individualImgAttr.data.dependentParent)printf("\tDependent parent image\n");
         if(data->MPentry[i].individualImgAttr.data.representativeImage)printf("\tRepresentative image\n");
+        if(ATTR_IS_SPECIFIED(data->attributes,MPTag_ConvergenceAngle))
+        {
+            printf("Convergence angle: ");
+            print_srational(data->attributes.ConvergenceAngle);
+            printf("\n");
+        }
+        if(ATTR_IS_SPECIFIED(data->attributes,MPTag_BaselineLength))
+        {
+            printf("Baseline Length: ");
+            print_rational(data->attributes.BaselineLength);
+            printf("\n");
+        }
         printf("----------\n");
     }
 
@@ -128,21 +217,21 @@ boolean print_APP02_MPF (MPExt_Data *data)
 }
 
 
-int MPExtReadValueIFD (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
+int MPExtReadValueIFD (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
 {
     int read_bytes=0;
     data->MPentry=(MPExt_MPEntry*)calloc(data->numberOfImages,sizeof(MPExt_MPEntry));
     for(data->currentEntry=0; data->currentEntry < data->numberOfImages; data->currentEntry++)
     {
-        data->MPentry[data->currentEntry].individualImgAttr.value=jpeg_getint32(cinfo,swapEndian);
+        data->MPentry[data->currentEntry].individualImgAttr.value=mpf_getint32(b,swapEndian);
         read_bytes+=4;
-        data->MPentry[data->currentEntry].size=jpeg_getint32(cinfo,swapEndian);
+        data->MPentry[data->currentEntry].size=mpf_getint32(b,swapEndian);
         read_bytes+=4;
-        data->MPentry[data->currentEntry].offset=jpeg_getint32(cinfo,swapEndian);
+        data->MPentry[data->currentEntry].offset=mpf_getint32(b,swapEndian);
         read_bytes+=4;
-        data->MPentry[data->currentEntry].dependentImageEntry1=jpeg_getint16(cinfo,swapEndian);
+        data->MPentry[data->currentEntry].dependentImageEntry1=mpf_getint16(b,swapEndian);
         read_bytes+=2;
-        data->MPentry[data->currentEntry].dependentImageEntry2=jpeg_getint16(cinfo,swapEndian);
+        data->MPentry[data->currentEntry].dependentImageEntry2=mpf_getint16(b,swapEndian);
         read_bytes+=2;
     }
     return read_bytes;
@@ -150,11 +239,11 @@ int MPExtReadValueIFD (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
 
 
 
-int MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
+int MPExtReadTag (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
 {
     int i;
-    unsigned int tag=0;
-    tag=jpeg_getint16(cinfo,swapEndian);
+    uint16_t tag=0;
+    tag=mpf_getint16(b,swapEndian);
     int read_bytes=2;
 
 
@@ -163,28 +252,71 @@ int MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
     case MPTag_MPFVersion :
         /*Specification says that the version count = 4 but that the total length of TAG+DATA is 12 */
         /*Retrieve only the 4 lasts characters, should be equal to 0100                             */
-        jpeg_getint16(cinfo,swapEndian);/*Type? 07->Undefined?*/
-        jpeg_getint32(cinfo,swapEndian);/*String size(Count)*/
-        for(i=0; i<4; ++i)data->version[i]=jpeg_getc(cinfo);
+        mpf_getint16(b,swapEndian);/*Type? 07->Undefined?*/
+        mpf_getint32(b,swapEndian);/*String size(Count)*/
+        for(i=0; i<4; ++i)data->version[i]=mpf_getbyte(b);
         read_bytes+=10;
         break;
     case MPTag_NumberOfImages :
         /*NumberOfImages block size is 12bytes*/
-        jpeg_getint16(cinfo,swapEndian);
+        mpf_getint16(b,swapEndian);
         read_bytes+=2;/*Type ? 04-> LONG?*/
-        jpeg_getint32(cinfo,swapEndian);
+        mpf_getint32(b,swapEndian);
         read_bytes+=4;/*Count = 1 ?*/
         /*Long value = last for 4 bytes ?*/
-        data->numberOfImages=jpeg_getint32(cinfo,swapEndian);
+        data->numberOfImages=mpf_getint32(b,swapEndian);
         read_bytes+=4;
         break;
     case MPTag_MPEntry:
-        data->EntryIndex.type=jpeg_getint16(cinfo,swapEndian);
+        data->EntryIndex.type=mpf_getint16(b,swapEndian);
         read_bytes+=2;/*Type? 07 = undefined?*/
-        data->EntryIndex.EntriesTabLength=jpeg_getint32(cinfo,swapEndian);
+        data->EntryIndex.EntriesTabLength=mpf_getint32(b,swapEndian);
         read_bytes+=4;
-        data->EntryIndex.FirstEntryOffset=jpeg_getint32(cinfo,swapEndian);
+        data->EntryIndex.FirstEntryOffset=mpf_getint32(b,swapEndian);
         read_bytes+=4;
+        break;
+
+    case MPTag_IndividualNum:
+        read_bytes+=mpf_getLONG(&data->attributes.IndividualNum,1,b,swapEndian);
+        break;
+    case MPTag_PanOrientation:
+        read_bytes+=mpf_getLONG(&data->attributes.PanOrientation,1,b,swapEndian);
+        break;
+    case MPTag_PanOverlapH:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.PanOverlapH,1,b,swapEndian);
+        break;
+    case MPTag_PanOverlapV:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.PanOverlapV,1,b,swapEndian);
+        break;
+    case MPTag_BaseViewpointNum:
+        read_bytes+=mpf_getLONG(&data->attributes.BaseViewpointNum,1,b,swapEndian);
+        break;
+    case MPTag_ConvergenceAngle:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.ConvergenceAngle,1,b,swapEndian);
+        break;
+    case MPTag_BaselineLength:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.BaselineLength,1,b,swapEndian);
+        break;
+    case MPTag_VerticalDivergence:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.VerticalDivergence,1,b,swapEndian);
+        break;
+    case MPTag_AxisDistanceX:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceX,1,b,swapEndian);
+        break;
+    case MPTag_AxisDistanceY:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceY,1,b,swapEndian);
+        break;
+    case MPTag_AxisDistanceZ:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceZ,1,b,swapEndian);
+        break;
+    case MPTag_YawAngle:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.YawAngle,1,b,swapEndian);
+        break;
+    case MPTag_PitchAngle:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.PitchAngle,1,b,swapEndian);
+        break;
+    case MPTag_RollAngle:
+        read_bytes+=mpf_getRATIONAL(&data->attributes.RollAngle,1,b,swapEndian);
         break;
     /*Non mandatory*/
     default:
@@ -198,38 +330,99 @@ int MPExtReadTag (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
             printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
         break;
     }
+    if(tag >=MPTag_IndividualNum && tag <= MPTag_RollAngle)
+        ATTR_IS_SPECIFIED(data->attributes,tag)=1;
     return read_bytes;
 }
 
 
 
 
-int MPExtReadIndexIFD (j_decompress_ptr cinfo,MPExt_Data *data, int swapEndian)
+int MPExtReadIndexIFD (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
 {
     int read_bytes=0;
     int i;
-    data->count=jpeg_getint16(cinfo,swapEndian);/*Number of tags*/
+    data->count=mpf_getint16(b,swapEndian);/*Number of tags*/
     read_bytes+=2;
     for(i=0; i<data->count; ++i)
     {
-        read_bytes+=MPExtReadTag(cinfo,data,swapEndian);
+        read_bytes+=MPExtReadTag(b,data,swapEndian);
     }
-    data->nextIFDOffset=jpeg_getint32(cinfo,swapEndian);
+    data->nextIFDOffset=mpf_getint32(b,swapEndian);
     read_bytes+=4;
 
-    read_bytes+=MPExtReadValueIFD(cinfo,data,swapEndian);
+    read_bytes+=MPExtReadValueIFD(b,data,swapEndian);
     return read_bytes;
 }
 
 int isFirstImage=0;
 
-boolean MPExtReadAPP02AsFirstImage(j_decompress_ptr cinfo)
+boolean MPExtReadAPP02AsFirstImage(j_decompress_ptr b)
 {
     isFirstImage=1;
-    int res=MPExtReadAPP02(cinfo);
+    int res=MPExtReadAPP02(b);
     isFirstImage=0;
     return res;
 }
+
+boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
+{
+    int i;
+    long length=b->_size;
+    int OFFSET_START = length;
+
+    data->byte_order= mpf_getint32(b,1);
+    length-=4;
+
+    int endiannessSwap=isLittleEndian() ^ (data->byte_order == LITTLE_ENDIAN);
+    /*TODO : Take the endianess into account...*/
+    printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
+    data->first_IFD_offset=mpf_getint32(b,endiannessSwap);
+    length-=4;
+
+    while(length > (int)( OFFSET_START - data->first_IFD_offset) ) //While we didn't reach the IFD...
+    {
+        mpf_getbyte(b);
+        length--;
+    }
+
+    if(isFirstImage)
+    {
+        printf("%d != %d\n",OFFSET_START,length);
+
+        length-=MPExtReadIndexIFD(b,data,endiannessSwap);
+        printf("%d != %d\n",OFFSET_START,length);
+
+    }
+
+    /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
+    //TODO : use offset (nextIFD of First IFD)
+    assert( (isFirstImage && (int)(OFFSET_START-data->nextIFDOffset) == length ) ||
+            (int)(OFFSET_START-data->first_IFD_offset) == length);
+    {
+        data->count_attr_IFD=mpf_getint16(b,endiannessSwap);
+        length-=2;
+        for(i=0; i<data->count_attr_IFD; ++i)
+        {
+            //TODO: add parsing from attribute tags
+            length-=MPExtReadTag(b,data,endiannessSwap);
+        }
+    }
+
+    printf("bytes remaining : %d\n",length);
+    while(length-- >0)
+    {
+        printf("0x%.2x ",mpf_getbyte(b));
+    }
+    printf("\n");
+    print_APP02_MPF(data);
+
+
+
+
+    return 1;
+}
+
 
 boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
 {
@@ -259,66 +452,24 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
         }
         return 1;
     }
-
-    int OFFSET_START = length;
-
-    data.byte_order= jpeg_getint32(cinfo,1);
-    length-=4;
-
-    int endiannessSwap=isLittleEndian() ^ (data.byte_order == LITTLE_ENDIAN);
-    /*TODO : Take the endianess into account...*/
-    printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
-    data.first_IFD_offset=jpeg_getint32(cinfo,endiannessSwap);
-    length-=4;
-
-    while(length > (int)( OFFSET_START - data.first_IFD_offset) ) //While we didn't reach the IFD...
+    MPFbuffer buf;
+    buf.buffer  = calloc(length,sizeof(MPFByte));
+    buf._cur=0;
+    buf._size=length;
+    for(i=0;i<length;i++)
     {
-        jpeg_getc(cinfo);
-        length--;
+        buf.buffer[i]=jpeg_getc(cinfo);
     }
 
-    if(isFirstImage)
-    {
-        printf("%d != %d\n",OFFSET_START,length);
-
-        length-=MPExtReadIndexIFD(cinfo,&data,endiannessSwap);
-        printf("%d != %d\n",OFFSET_START,length);
-
-    }
-
-    /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
-    //TODO : use offset (nextIFD of First IFD)
-    assert( (isFirstImage && (int)(OFFSET_START-data.nextIFDOffset) == length ) ||
-            (int)(OFFSET_START-data.first_IFD_offset) == length);
-    {
-        data.count_attr_IFD=jpeg_getint16(cinfo,endiannessSwap);
-        length-=2;
-        for(i=0; i<data.count_attr_IFD; ++i)
-        {
-            //TODO: add parsing from attribute tags
-            length-=MPExtReadTag(cinfo,&data,endiannessSwap);
-        }
-    }
-
-    printf("bytes remaining : %d\n",length);
-    while(length-- >0)
-    {
-        printf("0x%.2x ",jpeg_getc(cinfo));
-    }
-    printf("\n");
-    print_APP02_MPF(&data);
-
-
-
+   int ret= MPExtReadMPF(&buf,&data);
 
 
     /*****************************************************************************************/
     /************************************DONT FORGET IT !*************************************/
     /************************Will probably be moved somewhere else****************************/
-    destroyMP_Data(&data);
+    destroyMPF_Data(&data);
     /*****************************************************************************************/
     /*****************************************************************************************/
-
-    return 1;
+    return ret;
 }
 
