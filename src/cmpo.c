@@ -1,6 +1,5 @@
-#include "include/mpo.h"
-#include "cmpo.h"
-#include "icon.h"
+#include "libmpo/mpo.h"
+#include "libmpo/cmpo.h"
 
 #include <assert.h>
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/mpo.h"
-#include "cmpo.h"
+#include <libmpo/mpo.h>
+#include <libmpo/cmpo.h>
 
 /*Images data generated with Image magick convert (convert file.jpg file.rgb)
 * Then converted to raw array with GNU bin2c (bin2c file.rgc > fileraw.c)

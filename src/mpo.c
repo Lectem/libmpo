@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "include/mpo.h"
+#include "libmpo/mpo.h"
 
 
 inline char isLittleEndian()
@@ -90,9 +90,9 @@ int mpf_getLONG(MPFLong * value, int count,MPFbuffer_ptr b,int swapEndian)
     return read_bytes;
 }
 
+
 int mpf_getRATIONAL(MPFRational * value, int count,MPFbuffer_ptr b,int swapEndian)
 {
-    //TODO : USE THE OFFSET
     int read_bytes=0;
     read_bytes+=2;
     MPFLong type=mpf_getint16(b,swapEndian);
@@ -113,6 +113,10 @@ int mpf_getRATIONAL(MPFRational * value, int count,MPFbuffer_ptr b,int swapEndia
     return read_bytes;
 }
 
+
+#define mpf_getSRATIONAL(value,count,b,swapEndian) \
+        mpf_getRATIONAL(((MPFRational*) value),(count),(b),(swapEndian))
+
 void destroyMPF_Data(MPExt_Data *data)
 {
     if(data->MPentry)
@@ -122,17 +126,22 @@ void destroyMPF_Data(MPExt_Data *data)
     }
 }
 
-void print_rational(MPFRational r)
+void print_MPFLong(MPFLong l)
+{
+    printf("%d",l);
+}
+
+void print_MPFRational(MPFRational r)
 {
     if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) printf("Unknown");
-    printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+    else printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
 }
 
 
-void print_srational(MPFSRational r)
+void print_MPFSRational(MPFSRational r)
 {
-    if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) printf("Unknown");
-    printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+    if(r.denominator==0.0 || (r.numerator==(int32_t)0xFFFFFFFF&&r.denominator==(int32_t)0xFFFFFFFF) ) printf("Unknown");
+    else printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
 }
 
 
@@ -196,18 +205,28 @@ boolean print_APP02_MPF (MPExt_Data *data)
         if(data->MPentry[i].individualImgAttr.data.dependentChild)printf("\tDependent child image\n");
         if(data->MPentry[i].individualImgAttr.data.dependentParent)printf("\tDependent parent image\n");
         if(data->MPentry[i].individualImgAttr.data.representativeImage)printf("\tRepresentative image\n");
-        if(ATTR_IS_SPECIFIED(data->attributes,MPTag_ConvergenceAngle))
-        {
-            printf("Convergence angle: ");
-            print_srational(data->attributes.ConvergenceAngle);
-            printf("\n");
-        }
-        if(ATTR_IS_SPECIFIED(data->attributes,MPTag_BaselineLength))
-        {
-            printf("Baseline Length: ");
-            print_rational(data->attributes.BaselineLength);
-            printf("\n");
-        }
+
+#define print_attr(TagType,fieldname,name)\
+        {if(ATTR_IS_SPECIFIED(data->attributes,MPTag_ ## fieldname))\
+        {\
+            printf(name ": ");\
+            print_ ## TagType (data->attributes.fieldname);\
+            printf("\n");\
+        }}
+        print_attr(MPFLong,     IndividualNum,      "MP Individual Number\t\t");
+        print_attr(MPFLong,     PanOrientation,     "Panorama Scanning orientation\t");
+        print_attr(MPFRational, PanOverlapH,        "Panorama Horizontal Overlap\t");
+        print_attr(MPFRational, PanOverlapV,        "Panorama Vertical Overlap\t");
+        print_attr(MPFLong,     BaseViewpointNum,   "Base Viewpoint Number\t\t");
+        print_attr(MPFSRational,ConvergenceAngle,   "Convergence angle\t\t");
+        print_attr(MPFRational, BaselineLength,     "Baseline Length\t\t\t");
+        print_attr(MPFSRational,VerticalDivergence, "Vertical Divergence Angle\t");
+        print_attr(MPFSRational,AxisDistanceX,      "Horizontal Axis (X) distance\t");
+        print_attr(MPFSRational,AxisDistanceY,      "Vertical Axis (Y) distance\t");
+        print_attr(MPFSRational,AxisDistanceZ,      "Collimation Axis (Z) distance\t");
+        print_attr(MPFSRational,YawAngle,           "Yaw angle\t\t\t\t");
+        print_attr(MPFSRational,PitchAngle,         "Pitch angle\t\t\t\t");
+        print_attr(MPFSRational,RollAngle,          "Roll angle\t\t\t\t");
         printf("----------\n");
     }
 
@@ -292,31 +311,31 @@ int MPExtReadTag (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
         read_bytes+=mpf_getLONG(&data->attributes.BaseViewpointNum,1,b,swapEndian);
         break;
     case MPTag_ConvergenceAngle:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.ConvergenceAngle,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.ConvergenceAngle,1,b,swapEndian);
         break;
     case MPTag_BaselineLength:
         read_bytes+=mpf_getRATIONAL(&data->attributes.BaselineLength,1,b,swapEndian);
         break;
     case MPTag_VerticalDivergence:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.VerticalDivergence,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.VerticalDivergence,1,b,swapEndian);
         break;
     case MPTag_AxisDistanceX:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceX,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.AxisDistanceX,1,b,swapEndian);
         break;
     case MPTag_AxisDistanceY:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceY,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.AxisDistanceY,1,b,swapEndian);
         break;
     case MPTag_AxisDistanceZ:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.AxisDistanceZ,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.AxisDistanceZ,1,b,swapEndian);
         break;
     case MPTag_YawAngle:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.YawAngle,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.YawAngle,1,b,swapEndian);
         break;
     case MPTag_PitchAngle:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.PitchAngle,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.PitchAngle,1,b,swapEndian);
         break;
     case MPTag_RollAngle:
-        read_bytes+=mpf_getRATIONAL(&data->attributes.RollAngle,1,b,swapEndian);
+        read_bytes+=mpf_getSRATIONAL(&data->attributes.RollAngle,1,b,swapEndian);
         break;
     /*Non mandatory*/
     default:
@@ -369,7 +388,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
 {
     int i;
     long length=b->_size;
-    int OFFSET_START = length;
+    long OFFSET_START = length;
 
     data->byte_order= mpf_getint32(b,1);
     length-=4;
@@ -388,10 +407,10 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
 
     if(isFirstImage)
     {
-        printf("%d != %d\n",OFFSET_START,length);
+        printf("%ld != %ld\n",OFFSET_START,length);
 
         length-=MPExtReadIndexIFD(b,data,endiannessSwap);
-        printf("%d != %d\n",OFFSET_START,length);
+        printf("%ld != %ld\n",OFFSET_START,length);
 
     }
 
@@ -409,7 +428,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
         }
     }
 
-    printf("bytes remaining : %d\n",length);
+    printf("bytes remaining : %ld\n",length);
     while(length-- >0)
     {
         printf("0x%.2x ",mpf_getbyte(b));

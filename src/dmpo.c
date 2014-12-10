@@ -1,4 +1,4 @@
-#include "include/mpo.h"
+#include "libmpo/mpo.h"
 
 
 void decompress_mpo(char* filename)
