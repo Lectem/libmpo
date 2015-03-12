@@ -10,20 +10,6 @@ inline char isLittleEndian()
 }
 
 
-unsigned int jpeg_getc (j_decompress_ptr cinfo)
-/* Read next byte */
-{
-    struct jpeg_source_mgr * datasrc = cinfo->src;
-
-    if (datasrc->bytes_in_buffer == 0)
-    {
-        if (! (*datasrc->fill_input_buffer) (cinfo))
-            exit(-1);//ERREXIT(cinfo, JERR_CANT_SUSPEND);
-    }
-    datasrc->bytes_in_buffer--;
-    return GETJOCTET(*datasrc->next_input_byte++);
-}
-
 
 long mpf_tell(MPFbuffer_ptr b)
 {
@@ -128,20 +114,20 @@ void destroyMPF_Data(MPExt_Data *data)
 
 void print_MPFLong(MPFLong l)
 {
-    printf("%d",l);
+    mpo_printf("%d",l);
 }
 
 void print_MPFRational(MPFRational r)
 {
-    if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) printf("Unknown");
-    else printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+    if(r.denominator==0.0 || (r.numerator==0xFFFFFFFF&&r.denominator==0xFFFFFFFF) ) mpo_printf("Unknown");
+    else mpo_printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
 }
 
 
 void print_MPFSRational(MPFSRational r)
 {
-    if(r.denominator==0.0 || (r.numerator==(int32_t)0xFFFFFFFF&&r.denominator==(int32_t)0xFFFFFFFF) ) printf("Unknown");
-    else printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
+    if(r.denominator==0.0 || (r.numerator==(int32_t)0xFFFFFFFF&&r.denominator==(int32_t)0xFFFFFFFF) ) mpo_printf("Unknown");
+    else mpo_printf("%f (%d/%d)",(double)r.numerator/(double)r.denominator,r.numerator,r.denominator);
 }
 
 
@@ -156,62 +142,62 @@ boolean print_APP02_MPF (MPExt_Data *data)
         perror("Not an MP extended file.");
         return 0;
     }
-    printf("\n\n-------------MPF extension data-------------\n");
-    printf("MPF version:\t\t%.4s\n",data->version);
+    mpo_printf("\n\n-------------MPF extension data-------------\n");
+    mpo_printf("MPF version:\t\t%.4s\n",data->version);
     if(data->byte_order == LITTLE_ENDIAN)
-        printf("Byte order:\tlittle endian\n");
+        mpo_printf("Byte order:\tlittle endian\n");
     else if(data->byte_order == BIG_ENDIAN)
-        printf("Byte order:\tbig endian\n");
-    else printf("Couldn't recognize byte order : 0x%x\n",data->byte_order);
-    printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
-    printf("---MP Index IFD---\n");
-    printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
-    printf("Number of images:\t%d\n",data->numberOfImages);
-    if(data->currentEntry>0)printf("%d entries listed\n",data->currentEntry);
+        mpo_printf("Byte order:\tbig endian\n");
+    else mpo_printf("Couldn't recognize byte order : 0x%x\n",data->byte_order);
+    mpo_printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
+    mpo_printf("---MP Index IFD---\n");
+    mpo_printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
+    mpo_printf("Number of images:\t%d\n",data->numberOfImages);
+    if(data->currentEntry>0)mpo_printf("%d entries listed\n",data->currentEntry);
 
-    printf("----------\n");
+    mpo_printf("----------\n");
     for(i=0; i<data->currentEntry; ++i)
     {
-        printf("\tSize:\t\t%d\n\tOffset:\t\t%d\n",data->MPentry[i].size,data->MPentry[i].offset);
-        printf("\tDepImageEntry1:\t%d\n",data->MPentry[i].dependentImageEntry1);
-        printf("\tDepImageEntry2:\t%d\n",data->MPentry[i].dependentImageEntry2);
-        if(data->MPentry[i].individualImgAttr.data.imgType == 0)printf("\tData format:\tJPEG\n");
-        printf("\tImage type:\t");
+        mpo_printf("\tSize:\t\t%d\n\tOffset:\t\t%d\n",data->MPentry[i].size,data->MPentry[i].offset);
+        mpo_printf("\tDepImageEntry1:\t%d\n",data->MPentry[i].dependentImageEntry1);
+        mpo_printf("\tDepImageEntry2:\t%d\n",data->MPentry[i].dependentImageEntry2);
+        if(data->MPentry[i].individualImgAttr.data.imgType == 0)mpo_printf("\tData format:\tJPEG\n");
+        mpo_printf("\tImage type:\t");
         switch(data->MPentry[i].individualImgAttr.data.MPTypeCode)
         {
             case MPType_LargeThumbnail_Class1:
-                printf("Large Thumbnail (VGA)\n");
+                mpo_printf("Large Thumbnail (VGA)\n");
                 break;
             case MPType_LargeThumbnail_Class2:
-                printf("Large Thumbnail (Full-HD)\n");
+                mpo_printf("Large Thumbnail (Full-HD)\n");
                 break;
             case MPType_MultiFrame_Panorama  :
-                printf("Multi-Frame Panorama\n");
+                mpo_printf("Multi-Frame Panorama\n");
                 break;
             case MPType_MultiFrame_Disparity :
-                printf("Multi-Frame Disparity\n");
+                mpo_printf("Multi-Frame Disparity\n");
                 break;
             case MPType_MultiFrame_MultiAngle:
-                printf("Multi-Frame Multi-Angle\n");
+                mpo_printf("Multi-Frame Multi-Angle\n");
                 break;
             case MPType_Baseline             :
-                printf("Baseline\n");
+                mpo_printf("Baseline\n");
                 break;
             default:
-                printf("UNDEFINED! 0x%x(value=0x%x)\n",
+                mpo_printf("UNDEFINED! 0x%x(value=0x%x)\n",
                        data->MPentry[i].individualImgAttr.data.MPTypeCode,
                        (unsigned int)data->MPentry[i].individualImgAttr.value);
         }
-        if(data->MPentry[i].individualImgAttr.data.dependentChild)printf("\tDependent child image\n");
-        if(data->MPentry[i].individualImgAttr.data.dependentParent)printf("\tDependent parent image\n");
-        if(data->MPentry[i].individualImgAttr.data.representativeImage)printf("\tRepresentative image\n");
+        if(data->MPentry[i].individualImgAttr.data.dependentChild)mpo_printf("\tDependent child image\n");
+        if(data->MPentry[i].individualImgAttr.data.dependentParent)mpo_printf("\tDependent parent image\n");
+        if(data->MPentry[i].individualImgAttr.data.representativeImage)mpo_printf("\tRepresentative image\n");
 
 #define print_attr(TagType,fieldname,name)\
         {if(ATTR_IS_SPECIFIED(data->attributes,MPTag_ ## fieldname))\
         {\
-            printf(name ": ");\
+            mpo_printf(name ": ");\
             print_ ## TagType (data->attributes.fieldname);\
-            printf("\n");\
+            mpo_printf("\n");\
         }}
         print_attr(MPFLong,     IndividualNum,      "MP Individual Number\t\t");
         print_attr(MPFLong,     PanOrientation,     "Panorama Scanning orientation\t");
@@ -227,11 +213,11 @@ boolean print_APP02_MPF (MPExt_Data *data)
         print_attr(MPFSRational,YawAngle,           "Yaw angle\t\t\t\t");
         print_attr(MPFSRational,PitchAngle,         "Pitch angle\t\t\t\t");
         print_attr(MPFSRational,RollAngle,          "Roll angle\t\t\t\t");
-        printf("----------\n");
+        mpo_printf("----------\n");
     }
 
 
-    printf("-----------------End of MPF-----------------\n\n\n");
+    mpo_printf("-----------------End of MPF-----------------\n\n\n");
     return TRUE;
 }
 
@@ -340,13 +326,13 @@ int MPExtReadTag (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
     /*Non mandatory*/
     default:
         if(tag >>8 == 0xB0)
-            printf("----------------Ignoring Index IFD TAG : 0x%x----------------\n",tag);
+            mpo_printf("----------------Ignoring Index IFD TAG : 0x%x----------------\n",tag);
         else if(tag>>8 == 0xB1)
-            printf("-------------Ignoring Individual IFD TAG : 0x%x--------------\n",tag);
+            mpo_printf("-------------Ignoring Individual IFD TAG : 0x%x--------------\n",tag);
         else if(tag>>8 == 0xB2)
-            printf("----------------Ignoring Attr IFD TAG : 0x%x-----------------\n",tag);
+            mpo_printf("----------------Ignoring Attr IFD TAG : 0x%x-----------------\n",tag);
         else
-            printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
+            mpo_printf("-----------------------Unknown TAG : 0x%x--------------------\n",tag);
         break;
     }
     if(tag >=MPTag_IndividualNum && tag <= MPTag_RollAngle)
@@ -374,17 +360,8 @@ int MPExtReadIndexIFD (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
     return read_bytes;
 }
 
-int isFirstImage=0;
 
-boolean MPExtReadAPP02AsFirstImage(j_decompress_ptr b)
-{
-    isFirstImage=1;
-    int res=MPExtReadAPP02(b);
-    isFirstImage=0;
-    return res;
-}
-
-boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
+boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
 {
     int i;
     long length=b->_size;
@@ -395,7 +372,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
 
     int endiannessSwap=isLittleEndian() ^ (data->byte_order == LITTLE_ENDIAN);
     /*TODO : Take the endianess into account...*/
-    printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
+    mpo_printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
     data->first_IFD_offset=mpf_getint32(b,endiannessSwap);
     length-=4;
 
@@ -407,10 +384,10 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
 
     if(isFirstImage)
     {
-        printf("%ld != %ld\n",OFFSET_START,length);
+        mpo_printf("%ld != %ld\n",OFFSET_START,length);
 
         length-=MPExtReadIndexIFD(b,data,endiannessSwap);
-        printf("%ld != %ld\n",OFFSET_START,length);
+        mpo_printf("%ld != %ld\n",OFFSET_START,length);
 
     }
 
@@ -428,67 +405,17 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data)
         }
     }
 
-    printf("bytes remaining : %ld\n",length);
+    mpo_printf("bytes remaining : %ld\n",length);
     while(length-- >0)
     {
-        printf("0x%.2x ",mpf_getbyte(b));
+        mpo_printf("0x%.2x ",mpf_getbyte(b));
     }
-    printf("\n");
+    mpo_printf("\n");
     print_APP02_MPF(data);
 
 
 
 
     return 1;
-}
-
-
-boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
-{
-    int i=0;
-    MPExt_Data data=
-    {
-        .MPF_identifier={0},
-        .byte_order=LITTLE_ENDIAN,
-        .version={0},
-    };
-    int length;
-    length = jpeg_getc(cinfo) << 8;
-    length += jpeg_getc(cinfo);
-    printf( "APP02, length %d:\n",length);
-    length -= 2;
-    for(i=0; i<4; ++i)data.MPF_identifier[i]=jpeg_getc(cinfo);
-    length-=4;
-    if(data.MPF_identifier[0] != 'M'||
-            data.MPF_identifier[1] != 'P'||
-            data.MPF_identifier[2] != 'F'||
-            data.MPF_identifier[3] != 0)
-    {
-        /*Ignore this block*/
-        while(length-- >0)
-        {
-            jpeg_getc(cinfo);
-        }
-        return 1;
-    }
-    MPFbuffer buf;
-    buf.buffer  = calloc(length,sizeof(MPFByte));
-    buf._cur=0;
-    buf._size=length;
-    for(i=0;i<length;i++)
-    {
-        buf.buffer[i]=jpeg_getc(cinfo);
-    }
-
-   int ret= MPExtReadMPF(&buf,&data);
-
-
-    /*****************************************************************************************/
-    /************************************DONT FORGET IT !*************************************/
-    /************************Will probably be moved somewhere else****************************/
-    destroyMPF_Data(&data);
-    /*****************************************************************************************/
-    /*****************************************************************************************/
-    return ret;
 }
 

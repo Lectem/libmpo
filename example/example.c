@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <libmpo/mpo.h>
-#include <libmpo/cmpo.h>
+#include "libmpo/mpo.h"
+#include "libmpo/cmpo.h"
 
 /*Images data generated with Image magick convert (convert file.jpg file.rgb)
 * Then converted to raw array with GNU bin2c (bin2c file.rgc > fileraw.c)
@@ -11,8 +11,8 @@ extern unsigned char imageBytes_right[];
 
 int main()
 {
-//    decompress_mpo("3DS-big-endian.mpo");
-//    decompress_mpo("test-little-endian.mpo");
+    decompress_mpo("3DS-big-endian.mpo");
+    decompress_mpo("test-little-endian.mpo");
 
 
 

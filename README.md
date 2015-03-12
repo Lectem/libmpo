@@ -5,9 +5,9 @@ Those are used mainly for 3D cameras and the Nintendo 3DS.
 
 
 ##Main goal :
-- Load / Write 3D images (Multi-frame Disparity) through libjpeg.
-- Give others enough material to work with as the standard isn't clear on some points(especially for the Index IFD)
-- No exif library needed
+- Load / Write Stereoscopic 3D images (Multi-frame Disparity) through libjpeg.
+- Give others enough material to work with
+- No exif library needed (though you'll probably want to use one)
 
 ###Currently working :
 - Basic compression
@@ -15,27 +15,21 @@ Those are used mainly for 3D cameras and the Nintendo 3DS.
   Look at the example for more details
 
 
-###Partially working :
-
-- Simple Multi-frame Disparity MPO file compression
-
-
 ##Requirements :
 - libjpeg8 or later
 
 
 ##TODO (In *order* of priority):
-- Compression : Update Index IFD with images lengths and offsets
+- Compression : add attributes
 - Give a good interface for compression and decompression
-- Attribute IFD support
+- Simplify usage of MPF attributes
 - A good refactoring
 - Remove printf and other debugging stuff
-- A makefile (and pre-built binaries?)
 - Everything else
 
 
 ##Will not be done :
-- Exif and other markers support (you will be able to write/read it trough your own handlers)
+- Exif and other markers support (you will be able to write/read it trough your own handlers and libjpeg)
 
 ###Might not be done :
-- MPO files with other type than Multi-frame Disparity
+- Helper functions for non stereoscopic images

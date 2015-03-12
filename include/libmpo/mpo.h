@@ -7,7 +7,11 @@
 
 #include <stdint.h>
 
-
+#ifdef NDEBUG
+#define mpo_printf(args...)	((void)0)
+#else
+#define mpo_printf(args...) printf(args)
+#endif
 
 /**
  * \file
@@ -181,7 +185,7 @@ MPExt_Data;
 
 typedef struct
 {
-    MPExt_Data APP02;
+    MPExt_Data* APP02;
     struct jpeg_compress_struct *cinfo;
     JOCTET ** images_data;
 }
@@ -190,7 +194,7 @@ mpo_compress_struct;
 
 typedef struct
 {
-    MPExt_Data APP02;
+    MPExt_Data *APP02;
     struct jpeg_decompress_struct *cinfo;
     JOCTET ** images_data;
 }
@@ -205,5 +209,9 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo);
 
 
 inline char isLittleEndian();
+boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage);
+void destroyMPF_Data(MPExt_Data *data);
+
+
 
 #endif // MPO_H_INCLUDED
