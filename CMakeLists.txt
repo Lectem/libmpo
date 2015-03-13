@@ -1,9 +1,4 @@
 IF(BIICODE)
-  LIST(REMOVE_ITEM BII_LIB_SRC example/3dsraw.c
-                               example/3dsraw_right.c)
-  SET(BII_example_example_SRC ${BII_example_example_SRC}
-                               example/3dsraw.c
-                               example/3dsraw_right.c)
   ADD_BIICODE_TARGETS()
   return()
 ENDIF()
@@ -53,7 +48,7 @@ add_library(mpo SHARED $<TARGET_OBJECTS:mpo_obj>)
 add_library(mpo_static STATIC $<TARGET_OBJECTS:mpo_obj>)
 target_link_libraries(mpo jpeg)
 
-add_subdirectory(example)
+add_subdirectory(examples)
 
 INSTALL(TARGETS mpo_static mpo
   LIBRARY DESTINATION lib

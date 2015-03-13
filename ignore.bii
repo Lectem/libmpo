@@ -1,2 +1,6 @@
-example/*.mpo
+*.mpo
+*.jpg
 *.pdf
+*.exe
+build/*
+.idea/*

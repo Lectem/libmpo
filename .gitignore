@@ -1,2 +1,6 @@
 bin
 bii
+build
+*.exe
+*.mpo
+.idea/*
