@@ -1,4 +1,9 @@
 IF(BIICODE)
+  LIST(REMOVE_ITEM BII_LIB_SRC example/3dsraw.c
+                               example/3dsraw_right.c)
+  SET(BII_example_example_SRC ${BII_example_example_SRC}
+                               example/3dsraw.c
+                               example/3dsraw_right.c)
   ADD_BIICODE_TARGETS()
   return()
 ENDIF()
