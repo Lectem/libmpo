@@ -1,13 +1,11 @@
 set(EXECUTABLE_OUTPUT_PATH ./)
 
-file(
-        GLOB_RECURSE
-        example_source_files
-        *.c
-)
 
-add_executable(libmpo_example ${example_source_files})
+add_executable(libmpo_example example.c 3dsraw.c 3dsraw_right.c)
 target_link_libraries(libmpo_example mpo_static jpeg)
+add_executable(libmpo_decompress decompress.c)
+target_link_libraries(libmpo_decompress mpo_static jpeg)
+
 file(GLOB MPOFILES
   "*.mpo"
 )

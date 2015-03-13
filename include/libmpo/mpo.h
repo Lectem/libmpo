@@ -41,11 +41,9 @@ typedef uint16_t	    MPFShort;         /* 2 bytes */
 typedef int16_t         MPFSShort;        /* 2 bytes */
 typedef uint32_t	    MPFLong;          /* 4 bytes */
 typedef int32_t		    MPFSLong;         /* 4 bytes */
-typedef struct {MPFLong numerator; MPFLong denominator;}
-                        MPFRational;
+typedef struct {MPFLong numerator; MPFLong denominator;} MPFRational;
 typedef unsigned char	MPFUndefined;     /* 1 byte  */
-typedef struct {MPFSLong numerator; MPFSLong denominator;}
-                        MPFSRational;
+typedef struct {MPFSLong numerator; MPFSLong denominator;} MPFSRational;
 
 typedef struct
 {
@@ -72,10 +70,11 @@ typedef enum
     MPTag_NumberOfImages    = 0xB001,
     MPTag_MPEntry           = 0xB002,
     /*Optional*/
+    //TODO : implement those tags
     MPTag_ImageUIDList      = 0xB003,
     MPTag_TotalFrames       = 0xB004,
 
-    /**Individual image tags**/
+    /**Individual image tags (attributes)**/
     MPTag_IndividualNum     = 0xb101,
     MPTag_PanOrientation    = 0xb201,
     MPTag_PanOverlapH       = 0xb202,
@@ -124,7 +123,7 @@ typedef struct
 {
     MPFShort type;
     MPFLong EntriesTabLength;
-    MPFLong FirstEntryOffset;
+    MPFLong dataOffset;
 }
 MPExt_MPEntryIndexFields;
 

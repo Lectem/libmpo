@@ -20,7 +20,7 @@ void mpo_destroy_compress(mpo_compress_struct* mpoinfo);
  * \param height        Image's height in pixels
  *
  */
-void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,unsigned char src[]);
+void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,JOCTET src[]);
 
 /** \brief Convenience function to set width and height of all images at once
 */
@@ -44,3 +44,4 @@ mpo_write_file (mpo_compress_struct* mpoinfo,char * filename);
 
 void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image);
 
+void mpo_init_3d_compress(mpo_compress_struct* mpoinfo,JOCTET *imageBytes_left,JOCTET *imageBytes_right,int image_width,int image_height);
