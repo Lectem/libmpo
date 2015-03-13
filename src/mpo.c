@@ -26,7 +26,7 @@ void mpf_seek(MPFbuffer_ptr b,long offset, int from)
 unsigned int mpf_getbyte (MPFbuffer_ptr b)
 /* Read next byte */
 {
-    assert(b->_cur <= b->_size);
+    assert(b->_cur < b->_size);
     return b->buffer[b->_cur++];
 }
 
@@ -199,6 +199,7 @@ boolean print_APP02_MPF (MPExt_Data *data)
             print_ ## TagType (data->attributes.fieldname);\
             mpo_printf("\n");\
         }}
+
         print_attr(MPFLong,     IndividualNum,      "MP Individual Number\t\t");
         print_attr(MPFLong,     PanOrientation,     "Panorama Scanning orientation\t");
         print_attr(MPFRational, PanOverlapH,        "Panorama Horizontal Overlap\t");
@@ -277,7 +278,7 @@ int MPExtReadTag (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
         read_bytes+=2;/*Type? 07 = undefined?*/
         data->EntryIndex.EntriesTabLength=mpf_getint32(b,swapEndian);
         read_bytes+=4;
-        data->EntryIndex.FirstEntryOffset=mpf_getint32(b,swapEndian);
+        data->EntryIndex.dataOffset =mpf_getint32(b,swapEndian);
         read_bytes+=4;
         break;
 
@@ -371,7 +372,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
     length-=4;
 
     int endiannessSwap=isLittleEndian() ^ (data->byte_order == LITTLE_ENDIAN);
-    /*TODO : Take the endianess into account...*/
+
     mpo_printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
     data->first_IFD_offset=mpf_getint32(b,endiannessSwap);
     length-=4;
@@ -384,11 +385,9 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
 
     if(isFirstImage)
     {
-        mpo_printf("%ld != %ld\n",OFFSET_START,length);
+        mpo_printf("%ld != %ld\n",OFFSET_START - data->first_IFD_offset,length);
 
         length-=MPExtReadIndexIFD(b,data,endiannessSwap);
-        mpo_printf("%ld != %ld\n",OFFSET_START,length);
-
     }
 
     /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
@@ -404,6 +403,8 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
             length-=MPExtReadTag(b,data,endiannessSwap);
         }
     }
+
+    // TODO : add attrIFD
 
     mpo_printf("bytes remaining : %ld\n",length);
     while(length-- >0)

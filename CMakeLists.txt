@@ -14,6 +14,7 @@ project(libmpo C)
 message(status ${CMAKE_INCLUDE_PATH})
 
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -Wextra")
 
 
 
