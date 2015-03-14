@@ -14,22 +14,22 @@
 #endif
 
 /**
- * \file
- * \brief
+ * \file mpo.h
+ * \brief Data structures and definitions related to mpo files
  * \author Lectem
  */
 
-/*Those are Exif types*/
+/**Those are Exif types*/
 typedef enum
 {
-    MPF_BYTE         = 1,/*8-bit unsigned integer*/
-    MPF_ASCII        = 2,/*8-bit byte containing one 7-bit ASCII code.The final byte is terminated with NULL. */
-    MPF_SHORT        = 3,/*16-bits unsigned integer*/
-    MPF_LONG         = 4,/*32-bits integer*/
-    MPF_RATIONAL     = 5,/*Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator. */
-    MPF_UNDEFINED    = 7,
-    MPF_SLONG        = 9,/*32-byte signed integer (2's complement notation).*/
-    MPF_SRATIONAL    = 10 /*Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator. */
+    MPF_BYTE         = 1,/*!<8-bit unsigned integer*/
+    MPF_ASCII        = 2,/*!<8-bit byte containing one 7-bit ASCII code.The final byte is terminated with NULL. */
+    MPF_SHORT        = 3,/*!<16-bits unsigned integer*/
+    MPF_LONG         = 4,/*!<32-bits integer*/
+    MPF_RATIONAL     = 5,/*!<Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator. */
+    MPF_UNDEFINED    = 7,/*!<Anything undefined by the EXIF standard*/
+    MPF_SLONG        = 9,/*!<32-byte signed integer (2's complement notation).*/
+    MPF_SRATIONAL    = 10 /*!<Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator. */
 }
 MPFVal_types;
 
@@ -55,26 +55,41 @@ MPFbuffer;
 
 typedef MPFbuffer * MPFbuffer_ptr;
 
-/* See the DC-007_E Specification. */
-/* 5.2.2.1  Table 3, page 13 */
+/**Byte order of the data
+ *
+ * See the DC-007_E Specification.
+ * 5.2.2.1  Table 3, page 13
+ */
 typedef enum{ MPF_LITTLE_ENDIAN = 0x49492A00,
     MPF_BIG_ENDIAN = 0x4D4D002A }MPExt_ByteOrder;
 
-/* See the DC-007_E Specification. */
-/* 5.2.2.3  Table 3, page 13 */
+/** MP format tags
+ *
+ * See the DC-007_E Specification.
+ * 5.2.2.3  Table 3, page 13
+ */
 typedef enum
 {
-    /**MP Index IFD**/
-    /*Mandatory*/
+    /*MP Index IFD*/
+
+
+    ///@{
+    ///Mandatory
     MPTag_MPFVersion        = 0xB000,
     MPTag_NumberOfImages    = 0xB001,
     MPTag_MPEntry           = 0xB002,
-    /*Optional*/
+    ///@}
+
+
+    ///@{
+    ///Optional
     //TODO : implement those tags
     MPTag_ImageUIDList      = 0xB003,
     MPTag_TotalFrames       = 0xB004,
+    ///@}
 
-    /**Individual image tags (attributes)**/
+    ///@{
+    ///Individual image tags (attributes)
     MPTag_IndividualNum     = 0xb101,
     MPTag_PanOrientation    = 0xb201,
     MPTag_PanOverlapH       = 0xb202,
@@ -90,6 +105,7 @@ typedef enum
     MPTag_PitchAngle        = 0xb20c,
     MPTag_RollAngle         = 0xb20d
 
+    ///@}
 }MPExt_MPTags;
 
 typedef union

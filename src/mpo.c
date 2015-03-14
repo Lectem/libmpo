@@ -390,7 +390,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
         length-=MPExtReadIndexIFD(b,data,endiannessSwap);
     }
 
-    /**ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD**/
+    /*ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD*/
     //TODO : use offset (nextIFD of First IFD)
     assert( (isFirstImage && (int)(OFFSET_START-data->nextIFDOffset) == length ) ||
             (int)(OFFSET_START-data->first_IFD_offset) == length);

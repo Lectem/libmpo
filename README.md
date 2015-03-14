@@ -1,6 +1,3 @@
-
-#libmpo
-
 A future library to decode and encode MPO (multiple picture object) files.
 Those are used mainly for 3D cameras and the Nintendo 3DS.
 
@@ -19,6 +16,10 @@ Those are used mainly for 3D cameras and the Nintendo 3DS.
 ##Requirements :
 - libjpeg8 or later
 
+##Documentation
+
+The doxygen documentation is automatically generated after each commit.
+You can find it [here](http://lectem.github.io/libmpo/).
 
 ##TODO (In *order* of priority):
 - Compression : add attributes
