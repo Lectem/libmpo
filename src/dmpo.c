@@ -31,7 +31,7 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo)
     MPExt_Data data=
     {
         .MPF_identifier={0},
-        .byte_order=LITTLE_ENDIAN,
+        .byte_order=MPF_LITTLE_ENDIAN,
         .version={0},
     };
     int length;

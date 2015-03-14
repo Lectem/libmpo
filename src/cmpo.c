@@ -26,8 +26,8 @@ void mpo_init_write(MPExt_Data * data)
     data->MPF_identifier[2]='F';
     data->MPF_identifier[3]=0;
     if(isLittleEndian())
-        data->byte_order=LITTLE_ENDIAN;
-    else    data->byte_order=BIG_ENDIAN;
+        data->byte_order= MPF_LITTLE_ENDIAN;
+    else    data->byte_order= MPF_BIG_ENDIAN;
 
     data->first_IFD_offset=8;
 

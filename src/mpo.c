@@ -144,9 +144,9 @@ boolean print_APP02_MPF (MPExt_Data *data)
     }
     mpo_printf("\n\n-------------MPF extension data-------------\n");
     mpo_printf("MPF version:\t\t%.4s\n",data->version);
-    if(data->byte_order == LITTLE_ENDIAN)
+    if(data->byte_order == MPF_LITTLE_ENDIAN)
         mpo_printf("Byte order:\tlittle endian\n");
-    else if(data->byte_order == BIG_ENDIAN)
+    else if(data->byte_order == MPF_BIG_ENDIAN)
         mpo_printf("Byte order:\tbig endian\n");
     else mpo_printf("Couldn't recognize byte order : 0x%x\n",data->byte_order);
     mpo_printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
@@ -371,7 +371,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
     data->byte_order= mpf_getint32(b,1);
     length-=4;
 
-    int endiannessSwap=isLittleEndian() ^ (data->byte_order == LITTLE_ENDIAN);
+    int endiannessSwap=isLittleEndian() ^ (data->byte_order == MPF_LITTLE_ENDIAN);
 
     mpo_printf("ENDIANNESSSWAP=%d\n",endiannessSwap);
     data->first_IFD_offset=mpf_getint32(b,endiannessSwap);

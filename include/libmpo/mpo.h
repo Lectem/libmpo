@@ -57,8 +57,8 @@ typedef MPFbuffer * MPFbuffer_ptr;
 
 /* See the DC-007_E Specification. */
 /* 5.2.2.1  Table 3, page 13 */
-typedef enum{ LITTLE_ENDIAN = 0x49492A00,
-    BIG_ENDIAN = 0x4D4D002A }MPExt_ByteOrder;
+typedef enum{ MPF_LITTLE_ENDIAN = 0x49492A00,
+    MPF_BIG_ENDIAN = 0x4D4D002A }MPExt_ByteOrder;
 
 /* See the DC-007_E Specification. */
 /* 5.2.2.3  Table 3, page 13 */
