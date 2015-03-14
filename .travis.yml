@@ -1,12 +1,10 @@
 before_install:
-  - "wget https://launchpad.net/ubuntu/+source/cmake/2.8.12.2-0ubuntu3/+build/5826684/+files/cmake_2.8.12.2-0ubuntu3_amd64.deb"
-  - "wget https://launchpad.net/ubuntu/+archive/primary/+files/cmake-data_2.8.12.2-0ubuntu3_all.deb"
-  - "sudo apt-get remove cmake-data cmake"
-  - "sudo apt-get install libarchive13"
+  - sudo add-apt-repository -y ppa:smspillaz/cmake-2.8.12
+  - sudo apt-get update -qq
 
 
 install:
-  - "sudo dpkg --install cmake-data_2.8.12.2-0ubuntu3_all.deb cmake_2.8.12.2-0ubuntu3_amd64.deb"
+  - sudo apt-get install -qq cmake
   - sudo apt-get install -qq doxygen
 
 language: c
