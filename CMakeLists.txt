@@ -47,7 +47,7 @@ add_library(mpo_obj OBJECT ${source_files})
 add_library(mpo SHARED $<TARGET_OBJECTS:mpo_obj>)
 add_library(mpo_static STATIC $<TARGET_OBJECTS:mpo_obj>)
 target_link_libraries(mpo jpeg)
-set_target_properties(mpo PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(mpo_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(examples)
 
 INSTALL(TARGETS mpo_static mpo
