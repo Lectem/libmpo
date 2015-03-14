@@ -491,7 +491,7 @@ void mpo_write_MPO_Marker(mpo_compress_struct * mpoinfo,int image)
 }
 
 
-inline long mpotell(mpo_compress_struct* mpoinfo,int image)
+long mpotell(mpo_compress_struct* mpoinfo,int image)
 {
     return ftell(((my_dest_ptr)mpoinfo->cinfo[image].dest)->outfile)+/*Current file offset*/
                 OUTPUT_BUF_SIZE-mpoinfo->cinfo[image].dest->free_in_buffer;/*Current buffer offset /!\ Wrong if buffer is flushed...*/
