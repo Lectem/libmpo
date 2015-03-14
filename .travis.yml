@@ -1,4 +1,12 @@
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -qq doxygen
+
 language: c
+
+env:
+  global:
+    - secure: "O+zG6TSo9y2XQOUn8n+LcOIKg40ONpLgdZDYPnGjKM+OYp5dffLUjIWQj7PCknhL7HO+fObLGroLvDI7lWOvD81FhsTl5axGxt8NrtslfAnv6SIBom4dww1acqHTo0C1le1+mdhbB1anm7gYCAdDn3TApWBWbGkAOCkS5JzwqC4="
 
 compiler: 
   - gcc
@@ -9,3 +17,14 @@ script:
   - cd build
   - cmake ../ -G"Unix Makefiles" -DCMAKE_C_COMPILER=$(which $CC)
   - make
+
+after_success:
+  - #Build the doxygen files and upload to GH pages
+  - git config --global user.email "travis@travis-ci.org"
+  - git config --global user.name "TravisCI-DocBuilder"
+  - git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/Lectem/libmpo html
+  - doxygen Doxyfile
+  - cd html
+  - git add --all
+  - git commit -m"Doc generated from Travis build #$TRAVIS_BUILD_NUMBER"
+  - git push -fq origin gh-pages > /dev/null
