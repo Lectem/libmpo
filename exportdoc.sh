@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ "${CC}" == gcc ]; then
+if [ "${CC}" == "gcc" ]; then
 
 doxygen Doxyfile
 cd html
