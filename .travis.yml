@@ -27,7 +27,7 @@ after_success:
   - #Build the doxygen files and upload to GH pages
   - git config --global user.email "travis@travis-ci.org"
   - git config --global user.name "TravisCI-DocBuilder"
-  - git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/Lectem/libmpo html
+  - git clone --branch=gh-pages --single-branch https://${GH_TOKEN}@github.com/Lectem/libmpo html
   - cd ..
   - #export doc only once, in gcc job
   - sh exportdoc.sh
