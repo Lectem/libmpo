@@ -207,7 +207,7 @@ boolean MPExtReadAPP02 (j_decompress_ptr cinfo);
 
 
 
-inline char isLittleEndian();
+char isLittleEndian();
 boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage);
 void destroyMPF_Data(MPExt_Data *data);
 

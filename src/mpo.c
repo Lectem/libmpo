@@ -2,7 +2,7 @@
 #include "libmpo/mpo.h"
 
 
-inline char isLittleEndian()
+char isLittleEndian()
 {
     short int number = 0x1;
     char *numPtr = (char*)&number;
