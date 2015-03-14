@@ -7,13 +7,12 @@
 
 var indexSectionsWithContent =
 {
-  0: "cmr",
+  0: "cm",
   1: "m",
   2: "cm",
   3: "m",
   4: "m",
-  5: "m",
-  6: "r"
+  5: "m"
 };
 
 var indexSectionNames =
@@ -23,8 +22,7 @@ var indexSectionNames =
   2: "files",
   3: "functions",
   4: "enums",
-  5: "enumvalues",
-  6: "pages"
+  5: "enumvalues"
 };
 
 function convertToId(search)

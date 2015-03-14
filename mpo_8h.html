@@ -30,9 +30,9 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">$TRAVIS_BUILD_NUMBER</span>
+   &#160;<span id="projectnumber">28</span>
    </div>
-   <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files. Those are used mainly for 3D cameras and the Nintendo 3DS.</div>
+   <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
  </tr>
  </tbody>
@@ -46,7 +46,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -93,7 +92,7 @@ $(document).ready(function(){initNavTree('mpo_8h.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -113,6 +112,9 @@ $(document).ready(function(){initNavTree('mpo_8h.html','');});
 <div class="title">mpo.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Data structures and definitions related to mpo files.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;jpeglib.h&gt;</code><br />
@@ -184,46 +186,46 @@ typedef <a class="el" href="struct_m_p_fbuffer.html">MPFbuffer</a> *&#160;</td><
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:adb84dd616d1a77c5dea810b447657e36"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>MPFVal_types</b> { <br />
-&#160;&#160;<b>MPF_BYTE</b> = 1, 
-<b>MPF_ASCII</b> = 2, 
-<b>MPF_SHORT</b> = 3, 
-<b>MPF_LONG</b> = 4, 
+<tr class="memitem:adb84dd616d1a77c5dea810b447657e36"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36">MPFVal_types</a> { <br />
+&#160;&#160;<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36aa777450a5516860abe3a04c692ab74df">MPF_BYTE</a> = 1, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36ae2c8cc7989ba1012fd7341ccbccc9eaf">MPF_ASCII</a> = 2, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36a9f3489e0d56374b15cfee7129e1d4494">MPF_SHORT</a> = 3, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36a4a680fd1fb5150f3b70aef3ea3ab8d80">MPF_LONG</a> = 4, 
 <br />
-&#160;&#160;<b>MPF_RATIONAL</b> = 5, 
-<b>MPF_UNDEFINED</b> = 7, 
-<b>MPF_SLONG</b> = 9, 
-<b>MPF_SRATIONAL</b> = 10
+&#160;&#160;<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36ab9be68587f15e210551d6132722129e1">MPF_RATIONAL</a> = 5, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36a2afabf52cb488417417598fcef186ac4">MPF_UNDEFINED</a> = 7, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36a9f83d6c205172e1c515151f33239df29">MPF_SLONG</a> = 9, 
+<a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36aa301e94621dd84c4e4a36af64eee6041">MPF_SRATIONAL</a> = 10
 <br />
  }</td></tr>
 <tr class="separator:adb84dd616d1a77c5dea810b447657e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43d9b482dc13f1b57fec4db7a7b7a2bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43d9b482dc13f1b57fec4db7a7b7a2bf"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>MPExt_ByteOrder</b> { <b>MPF_LITTLE_ENDIAN</b> = 0x49492A00, 
+<tr class="memitem:a43d9b482dc13f1b57fec4db7a7b7a2bf"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpo_8h.html#a43d9b482dc13f1b57fec4db7a7b7a2bf">MPExt_ByteOrder</a> { <b>MPF_LITTLE_ENDIAN</b> = 0x49492A00, 
 <b>MPF_BIG_ENDIAN</b> = 0x4D4D002A
  }</td></tr>
 <tr class="separator:a43d9b482dc13f1b57fec4db7a7b7a2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a026f15987e14cbf63c3a44f18d358602"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602">MPExt_MPTags</a> { <br />
 &#160;&#160;<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a5ee37d7f45ff3e0f14957fc4c872c4fd">MPTag_MPFVersion</a> = 0xB000, 
-<b>MPTag_NumberOfImages</b> = 0xB001, 
-<b>MPTag_MPEntry</b> = 0xB002, 
-<b>MPTag_ImageUIDList</b> = 0xB003, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602abc68e133da6781510ca814a200099783">MPTag_NumberOfImages</a> = 0xB001, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602acf098c28bea4dd444a9b0a70d1b38141">MPTag_MPEntry</a> = 0xB002, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a37877c3c1b1103111c0c5d8ec114b7eb">MPTag_ImageUIDList</a> = 0xB003, 
 <br />
-&#160;&#160;<b>MPTag_TotalFrames</b> = 0xB004, 
+&#160;&#160;<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a7a1933965e2c6a020680e40a5d70495f">MPTag_TotalFrames</a> = 0xB004, 
 <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a94c40e328aae0bed810b8043d0d9c013">MPTag_IndividualNum</a> = 0xb101, 
-<b>MPTag_PanOrientation</b> = 0xb201, 
-<b>MPTag_PanOverlapH</b> = 0xb202, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a217670665d703dac295ac192895e3d96">MPTag_PanOrientation</a> = 0xb201, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a6274bb4ce05c7c76d859b6f46dafdf00">MPTag_PanOverlapH</a> = 0xb202, 
 <br />
-&#160;&#160;<b>MPTag_PanOverlapV</b> = 0xb203, 
-<b>MPTag_BaseViewpointNum</b> = 0xb204, 
-<b>MPTag_ConvergenceAngle</b> = 0xb205, 
-<b>MPTag_BaselineLength</b> = 0xb206, 
+&#160;&#160;<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602abe068fc2fa27b93b9dd3e443a28a3fd9">MPTag_PanOverlapV</a> = 0xb203, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a5bdb1a0a13aaaa9b18c32be1e45856c6">MPTag_BaseViewpointNum</a> = 0xb204, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a735f42a84dd967f6a6fb4f0828f13a17">MPTag_ConvergenceAngle</a> = 0xb205, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602acf2806d86ff4d4bb9d458c52fb21db5a">MPTag_BaselineLength</a> = 0xb206, 
 <br />
-&#160;&#160;<b>MPTag_VerticalDivergence</b> = 0xb207, 
-<b>MPTag_AxisDistanceX</b> = 0xb208, 
-<b>MPTag_AxisDistanceY</b> = 0xb209, 
-<b>MPTag_AxisDistanceZ</b> = 0xb20a, 
+&#160;&#160;<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a7c815986b19de33b847960c6fc07446f">MPTag_VerticalDivergence</a> = 0xb207, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602ac83ca27ad35171f667c179ade1015573">MPTag_AxisDistanceX</a> = 0xb208, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602ac3ebfd2971a36266944a1977cb306202">MPTag_AxisDistanceY</a> = 0xb209, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a144a797d42205eb38f3ebecd88f0ae6b">MPTag_AxisDistanceZ</a> = 0xb20a, 
 <br />
-&#160;&#160;<b>MPTag_YawAngle</b> = 0xb20b, 
-<b>MPTag_PitchAngle</b> = 0xb20c, 
+&#160;&#160;<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a969700bfe220252c5ef32fc247079d6b">MPTag_YawAngle</a> = 0xb20b, 
+<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a216cb578a268a8a3583b0fbe5ba4b498">MPTag_PitchAngle</a> = 0xb20c, 
 <b>MPTag_RollAngle</b> = 0xb20d
 <br />
  }</td></tr>
@@ -259,15 +261,31 @@ boolean&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadAPP02</b>
 <tr class="memitem:a69b441ebf55e694fe35f9135bf951c4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69b441ebf55e694fe35f9135bf951c4d"></a>
 char&#160;</td><td class="memItemRight" valign="bottom"><b>isLittleEndian</b> ()</td></tr>
 <tr class="separator:a69b441ebf55e694fe35f9135bf951c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07ea329e8ad62846b81fccd3531c0d6e"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpo_8h.html#a07ea329e8ad62846b81fccd3531c0d6e">MPExtReadMPF</a> (<a class="el" href="struct_m_p_fbuffer.html">MPFbuffer_ptr</a> b, <a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data, int isFirstImage)</td></tr>
+<tr class="memitem:a07ea329e8ad62846b81fccd3531c0d6e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07ea329e8ad62846b81fccd3531c0d6e"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadMPF</b> (<a class="el" href="struct_m_p_fbuffer.html">MPFbuffer_ptr</a> b, <a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data, int isFirstImage)</td></tr>
 <tr class="separator:a07ea329e8ad62846b81fccd3531c0d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7693a9fc1571b76eeb781751bd110c37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7693a9fc1571b76eeb781751bd110c37"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyMPF_Data</b> (<a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data)</td></tr>
 <tr class="separator:a7693a9fc1571b76eeb781751bd110c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Lectem </dd></dl>
+<div class="textblock"><p>Data structures and definitions related to mpo files. </p>
+<dl class="section author"><dt>Author</dt><dd>Lectem </dd></dl>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="a43d9b482dc13f1b57fec4db7a7b7a2bf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="mpo_8h.html#a43d9b482dc13f1b57fec4db7a7b7a2bf">MPExt_ByteOrder</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Byte order of the data</p>
+<p>See the DC-007_E Specification. 5.2.2.1 Table 3, page 13 </p>
+
+</div>
+</div>
 <a class="anchor" id="a026f15987e14cbf63c3a44f18d358602"></a>
 <div class="memitem">
 <div class="memproto">
@@ -277,48 +295,103 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyMPF_Data</b> (
         </tr>
       </table>
 </div><div class="memdoc">
+<p>MP format tags</p>
+<p>See the DC-007_E Specification. 5.2.2.3 Table 3, page 13 </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a5ee37d7f45ff3e0f14957fc4c872c4fd"></a>MPTag_MPFVersion&#160;</td><td class="fielddoc">
-<p>MP Index IFD </p>
+<p>Mandatory </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602abc68e133da6781510ca814a200099783"></a>MPTag_NumberOfImages&#160;</td><td class="fielddoc">
+<p>Mandatory </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602acf098c28bea4dd444a9b0a70d1b38141"></a>MPTag_MPEntry&#160;</td><td class="fielddoc">
+<p>Mandatory </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a37877c3c1b1103111c0c5d8ec114b7eb"></a>MPTag_ImageUIDList&#160;</td><td class="fielddoc">
+<p>Optional </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a7a1933965e2c6a020680e40a5d70495f"></a>MPTag_TotalFrames&#160;</td><td class="fielddoc">
+<p>Optional </p>
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a94c40e328aae0bed810b8043d0d9c013"></a>MPTag_IndividualNum&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a217670665d703dac295ac192895e3d96"></a>MPTag_PanOrientation&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a6274bb4ce05c7c76d859b6f46dafdf00"></a>MPTag_PanOverlapH&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602abe068fc2fa27b93b9dd3e443a28a3fd9"></a>MPTag_PanOverlapV&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a5bdb1a0a13aaaa9b18c32be1e45856c6"></a>MPTag_BaseViewpointNum&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a735f42a84dd967f6a6fb4f0828f13a17"></a>MPTag_ConvergenceAngle&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602acf2806d86ff4d4bb9d458c52fb21db5a"></a>MPTag_BaselineLength&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a7c815986b19de33b847960c6fc07446f"></a>MPTag_VerticalDivergence&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602ac83ca27ad35171f667c179ade1015573"></a>MPTag_AxisDistanceX&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602ac3ebfd2971a36266944a1977cb306202"></a>MPTag_AxisDistanceY&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a144a797d42205eb38f3ebecd88f0ae6b"></a>MPTag_AxisDistanceZ&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a969700bfe220252c5ef32fc247079d6b"></a>MPTag_YawAngle&#160;</td><td class="fielddoc">
+<p>Individual image tags (attributes) </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a026f15987e14cbf63c3a44f18d358602a216cb578a268a8a3583b0fbe5ba4b498"></a>MPTag_PitchAngle&#160;</td><td class="fielddoc">
 <p>Individual image tags (attributes) </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a07ea329e8ad62846b81fccd3531c0d6e"></a>
+<a class="anchor" id="adb84dd616d1a77c5dea810b447657e36"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boolean MPExtReadMPF </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_m_p_fbuffer.html">MPFbuffer_ptr</a>&#160;</td>
-          <td class="paramname"><em>b</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>isFirstImage</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">enum <a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36">MPFVal_types</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>ASSUMING MP ATTRIBUTES IFD TO BE RIGHT AFTER THE VALUE OF MP INDEX IFD </p>
+<p>Those are Exif types </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36aa777450a5516860abe3a04c692ab74df"></a>MPF_BYTE&#160;</td><td class="fielddoc">
+<p>8-bit unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36ae2c8cc7989ba1012fd7341ccbccc9eaf"></a>MPF_ASCII&#160;</td><td class="fielddoc">
+<p>8-bit byte containing one 7-bit ASCII code.The final byte is terminated with NULL. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36a9f3489e0d56374b15cfee7129e1d4494"></a>MPF_SHORT&#160;</td><td class="fielddoc">
+<p>16-bits unsigned integer </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36a4a680fd1fb5150f3b70aef3ea3ab8d80"></a>MPF_LONG&#160;</td><td class="fielddoc">
+<p>32-bits integer </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36ab9be68587f15e210551d6132722129e1"></a>MPF_RATIONAL&#160;</td><td class="fielddoc">
+<p>Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36a2afabf52cb488417417598fcef186ac4"></a>MPF_UNDEFINED&#160;</td><td class="fielddoc">
+<p>Anything undefined by the EXIF standard </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36a9f83d6c205172e1c515151f33239df29"></a>MPF_SLONG&#160;</td><td class="fielddoc">
+<p>32-byte signed integer (2's complement notation). </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="adb84dd616d1a77c5dea810b447657e36aa301e94621dd84c4e4a36af64eee6041"></a>MPF_SRATIONAL&#160;</td><td class="fielddoc">
+<p>Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator. </p>
+</td></tr>
+</table>
 
 </div>
 </div>
@@ -328,7 +401,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyMPF_Data</b> (
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_d2baaf53efa624276349580d96691ae7.html">libmpo</a></li><li class="navelem"><a class="el" href="mpo_8h.html">mpo.h</a></li>
-    <li class="footer">Generated on Sat Mar 14 2015 22:48:59 for Libmpo by
+    <li class="footer">Generated on Sat Mar 14 2015 23:42:25 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>
