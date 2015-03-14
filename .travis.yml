@@ -5,7 +5,7 @@ before_install:
 
 
 install:
-  - "sudo dpkg --install cmake-data_2.8.8-2ubuntu1_all.deb cmake_2.8.8-2ubuntu1_amd64.deb"
+  - "sudo dpkg --install cmake-data_2.8.12.2-0ubuntu3_all.deb cmake_2.8.12.2-0ubuntu3_amd64.deb"
   - sudo apt-get install -qq doxygen
 
 language: c
