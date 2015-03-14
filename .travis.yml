@@ -1,6 +1,6 @@
 before_install:
-  - "wget https://launchpad.net/ubuntu/+source/cmake/2.8.8-2ubuntu1/+build/3441442/+files/cmake_2.8.8-2ubuntu1_amd64.deb"
-  - "wget https://launchpad.net/ubuntu/+archive/primary/+files/cmake-data_2.8.8-2ubuntu1_all.deb"
+  - "wget https://launchpad.net/ubuntu/+source/cmake/2.8.12.2-0ubuntu3/+build/5826684/+files/cmake_2.8.12.2-0ubuntu3_amd64.deb"
+  - "wget https://launchpad.net/ubuntu/+archive/primary/+files/cmake-data_2.8.12.2-0ubuntu3_all.deb"
   - "sudo apt-get remove cmake-data cmake"
 
 
