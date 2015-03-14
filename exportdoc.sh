@@ -1,7 +1,6 @@
 #!/bin/sh
 if [ "$CC" = "gcc" ] && [ "$TRAVIS_REPO_SLUG" == "Lectem/libmpo" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
-cd ..
-git clone --branch=gh-pages --single-branch https://${GH_TOKEN}@github.com/Lectem/libmpo html
+git clone --branch=gh-pages --single-branch --depth 1 https://${GH_TOKEN}@github.com/Lectem/libmpo html
 doxygen Doxyfile
 cd html
 git add --all
