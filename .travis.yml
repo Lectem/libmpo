@@ -5,7 +5,6 @@ before_install:
 
 install:
   - sudo apt-get install -qq cmake
-  - sudo apt-get install -qq doxygen
 
 language: c
 

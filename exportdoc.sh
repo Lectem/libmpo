@@ -1,5 +1,6 @@
 #!/bin/sh
-if [ "$CC" = "gcc" ] && [ "$TRAVIS_REPO_SLUG" == "Lectem/libmpo" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+if [ "$CC" = "gcc" ] && [ "$TRAVIS_REPO_SLUG" = "Lectem/libmpo" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+sudo apt-get install -qq doxygen
 git clone --branch=gh-pages --single-branch --depth 1 https://${GH_TOKEN}@github.com/Lectem/libmpo html
 doxygen Doxyfile
 cd html
