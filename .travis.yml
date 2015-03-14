@@ -1,5 +1,6 @@
 before_install:
   - sudo add-apt-repository --yes ppa:kalakris/cmake
+  - test "$CC" = "clang" && sudo add-apt-repository --yes ppa:libreoffice/ppa || true
   - sudo apt-get update -qq
 
 
