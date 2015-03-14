@@ -28,7 +28,7 @@ after_success:
   - git config --global user.email "travis@travis-ci.org"
   - git config --global user.name "TravisCI-DocBuilder"
   - git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/Lectem/libmpo html
-  - ls
+  - cd ..
   - doxygen Doxyfile
   - cd html
   - git add --all
