@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">28</span>
+   &#160;<span id="projectnumber">Build #29</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('globals.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -123,6 +123,9 @@ $(document).ready(function(){initNavTree('globals.html','');});
 </li>
 <li>MPExt_MPTags
 : <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602">mpo.h</a>
+</li>
+<li>MPExt_MPType
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07">mpo.h</a>
 </li>
 <li>MPF_ASCII
 : <a class="el" href="mpo_8h.html#adb84dd616d1a77c5dea810b447657e36ae2c8cc7989ba1012fd7341ccbccc9eaf">mpo.h</a>
@@ -211,6 +214,9 @@ $(document).ready(function(){initNavTree('globals.html','');});
 <li>MPTag_PitchAngle
 : <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a216cb578a268a8a3583b0fbe5ba4b498">mpo.h</a>
 </li>
+<li>MPTag_RollAngle
+: <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a01028b3da4fd31aff421d038f1ac229f">mpo.h</a>
+</li>
 <li>MPTag_TotalFrames
 : <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a7a1933965e2c6a020680e40a5d70495f">mpo.h</a>
 </li>
@@ -220,13 +226,37 @@ $(document).ready(function(){initNavTree('globals.html','');});
 <li>MPTag_YawAngle
 : <a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a969700bfe220252c5ef32fc247079d6b">mpo.h</a>
 </li>
+<li>MPType_Baseline
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07aa9a70894ed3d4cf8ce9fa93b3ffb7101">mpo.h</a>
+</li>
+<li>MPType_LargeThumbnail_Class1
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a33ab52d0f21985d9500e81aaf709be2a">mpo.h</a>
+</li>
+<li>MPType_LargeThumbnail_Class2
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a349dee68a7c6f09b3e9a7f60d65c6d63">mpo.h</a>
+</li>
+<li>MPType_LargeThumbnail_Mask
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a933b86af5cc7a3771eaf0c0e2e349261">mpo.h</a>
+</li>
+<li>MPType_MultiFrame_Disparity
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a9cba9b8453f9bd27f4b2e0297b105aa1">mpo.h</a>
+</li>
+<li>MPType_MultiFrame_Mask
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a99ae55d4b2e3895b84302871b9e31f47">mpo.h</a>
+</li>
+<li>MPType_MultiFrame_MultiAngle
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a6d5fbfb75f7a307fe4a0a1bb76a36bd7">mpo.h</a>
+</li>
+<li>MPType_MultiFrame_Panorama
+: <a class="el" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a0e2cfc55a220b7c57cbb2acb2c790406">mpo.h</a>
+</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Mar 14 2015 23:42:25 for Libmpo by
+    <li class="footer">Generated on Sun Mar 15 2015 02:09:23 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

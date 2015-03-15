@@ -17,6 +17,8 @@ var NAVTREEINDEX0 =
 "dir_d2baaf53efa624276349580d96691ae7.html":[1,0,0,0],
 "dir_d44c64559bbebec7f509842c48db8b23.html":[1,0,0],
 "files.html":[1,0],
+"functions.html":[0,2,0],
+"functions_vars.html":[0,2,1],
 "globals.html":[1,1,0],
 "globals_enum.html":[1,1,2],
 "globals_eval.html":[1,1,3],

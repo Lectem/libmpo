@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">28</span>
+   &#160;<span id="projectnumber">Build #29</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -70,6 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -92,7 +93,7 @@ $(document).ready(function(){initNavTree('struct_m_p_ext___image_attr.html','');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -108,21 +109,29 @@ $(document).ready(function(){initNavTree('struct_m_p_ext___image_attr.html','');
 <div class="title">MPExt_ImageAttr Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="mpo_8h_source.html">mpo.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ae6a992478cb87c3aa2dbd635f9a88ff6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6a992478cb87c3aa2dbd635f9a88ff6"></a>
-MPFLong&#160;</td><td class="memItemRight" valign="bottom"><b>IndividualNum</b></td></tr>
+<tr class="memitem:ae6a992478cb87c3aa2dbd635f9a88ff6"><td class="memItemLeft" align="right" valign="top">MPFLong&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#ae6a992478cb87c3aa2dbd635f9a88ff6">IndividualNum</a></td></tr>
+<tr class="memdesc:ae6a992478cb87c3aa2dbd635f9a88ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of the Individual Image.  <a href="#ae6a992478cb87c3aa2dbd635f9a88ff6">More...</a><br /></td></tr>
 <tr class="separator:ae6a992478cb87c3aa2dbd635f9a88ff6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e824bffe2d45f037c6e9282e96b15b8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e824bffe2d45f037c6e9282e96b15b8"></a>
-MPFLong&#160;</td><td class="memItemRight" valign="bottom"><b>PanOrientation</b></td></tr>
+<tr class="memitem:a7c6f6e4311d99fcdf1f13a6cc1920fbf"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#a7c6f6e4311d99fcdf1f13a6cc1920fbf">is_specified</a> [<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a01028b3da4fd31aff421d038f1ac229f">MPTag_RollAngle</a>-<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a94c40e328aae0bed810b8043d0d9c013">MPTag_IndividualNum</a>+1]</td></tr>
+<tr class="separator:a7c6f6e4311d99fcdf1f13a6cc1920fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Panorama Images attributes</div></td></tr>
+<tr class="memitem:a6e824bffe2d45f037c6e9282e96b15b8"><td class="memItemLeft" align="right" valign="top">MPFLong&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#a6e824bffe2d45f037c6e9282e96b15b8">PanOrientation</a></td></tr>
+<tr class="memdesc:a6e824bffe2d45f037c6e9282e96b15b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Panorama Scanning Orientation.  <a href="#a6e824bffe2d45f037c6e9282e96b15b8">More...</a><br /></td></tr>
 <tr class="separator:a6e824bffe2d45f037c6e9282e96b15b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a300e7c943aa2e5623b56119fbffabd26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a300e7c943aa2e5623b56119fbffabd26"></a>
-<a class="el" href="struct_m_p_f_rational.html">MPFRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>PanOverlapH</b></td></tr>
+<tr class="memitem:a300e7c943aa2e5623b56119fbffabd26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_m_p_f_rational.html">MPFRational</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#a300e7c943aa2e5623b56119fbffabd26">PanOverlapH</a></td></tr>
+<tr class="memdesc:a300e7c943aa2e5623b56119fbffabd26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Panorama Scanning Orientation.  <a href="#a300e7c943aa2e5623b56119fbffabd26">More...</a><br /></td></tr>
 <tr class="separator:a300e7c943aa2e5623b56119fbffabd26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74c74afe6c6ba0384beee438b1f9f2ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74c74afe6c6ba0384beee438b1f9f2ae"></a>
-<a class="el" href="struct_m_p_f_rational.html">MPFRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>PanOverlapV</b></td></tr>
+<tr class="memitem:a74c74afe6c6ba0384beee438b1f9f2ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_m_p_f_rational.html">MPFRational</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#a74c74afe6c6ba0384beee438b1f9f2ae">PanOverlapV</a></td></tr>
+<tr class="memdesc:a74c74afe6c6ba0384beee438b1f9f2ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Panorama Scanning Orientation.  <a href="#a74c74afe6c6ba0384beee438b1f9f2ae">More...</a><br /></td></tr>
 <tr class="separator:a74c74afe6c6ba0384beee438b1f9f2ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Multi-View Images attributes</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Used for Disparity and Multi-Angles Images </p>
+</div></td></tr>
 <tr class="memitem:a314884c675cb672eb3bbd2db2e57d8e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a314884c675cb672eb3bbd2db2e57d8e1"></a>
 MPFLong&#160;</td><td class="memItemRight" valign="bottom"><b>BaseViewpointNum</b></td></tr>
 <tr class="separator:a314884c675cb672eb3bbd2db2e57d8e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,6 +144,7 @@ MPFLong&#160;</td><td class="memItemRight" valign="bottom"><b>BaseViewpointNum</
 <tr class="memitem:ab9e58929955bf14a5ec75d476568b86d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab9e58929955bf14a5ec75d476568b86d"></a>
 <a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>VerticalDivergence</b></td></tr>
 <tr class="separator:ab9e58929955bf14a5ec75d476568b86d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Relative distance to the Target Object</div></td></tr>
 <tr class="memitem:aacff5a43647e4f819ddb6ade80ed6be2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacff5a43647e4f819ddb6ade80ed6be2"></a>
 <a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>AxisDistanceX</b></td></tr>
 <tr class="separator:aacff5a43647e4f819ddb6ade80ed6be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,19 +154,102 @@ MPFLong&#160;</td><td class="memItemRight" valign="bottom"><b>BaseViewpointNum</
 <tr class="memitem:ac2ed3a0f02b4297ca925928e791fb94c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2ed3a0f02b4297ca925928e791fb94c"></a>
 <a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>AxisDistanceZ</b></td></tr>
 <tr class="separator:ac2ed3a0f02b4297ca925928e791fb94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Relative angle to the Target Object</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>See the Section 5.2.4.10 page 26 or the Annex A.11.Multi-Angle Image Examples page 53 </p>
+</div></td></tr>
 <tr class="memitem:abc63ec67968459bdf2ecc82a162f950e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abc63ec67968459bdf2ecc82a162f950e"></a>
-<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>YawAngle</b></td></tr>
+<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#abc63ec67968459bdf2ecc82a162f950e">YawAngle</a></td></tr>
+<tr class="memdesc:abc63ec67968459bdf2ecc82a162f950e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical axis angle. <br /></td></tr>
 <tr class="separator:abc63ec67968459bdf2ecc82a162f950e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3857ffe6399f83b1cb77215d44e2fe2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af3857ffe6399f83b1cb77215d44e2fe2"></a>
-<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>PitchAngle</b></td></tr>
+<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#af3857ffe6399f83b1cb77215d44e2fe2">PitchAngle</a></td></tr>
+<tr class="memdesc:af3857ffe6399f83b1cb77215d44e2fe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Horizontal axis angle. <br /></td></tr>
 <tr class="separator:af3857ffe6399f83b1cb77215d44e2fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae89bf39c212c04353a94fca5017d241e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae89bf39c212c04353a94fca5017d241e"></a>
-<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><b>RollAngle</b></td></tr>
+<a class="el" href="struct_m_p_f_s_rational.html">MPFSRational</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___image_attr.html#ae89bf39c212c04353a94fca5017d241e">RollAngle</a></td></tr>
+<tr class="memdesc:ae89bf39c212c04353a94fca5017d241e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collimation axis angle. <br /></td></tr>
 <tr class="separator:ae89bf39c212c04353a94fca5017d241e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c6f6e4311d99fcdf1f13a6cc1920fbf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c6f6e4311d99fcdf1f13a6cc1920fbf"></a>
-boolean&#160;</td><td class="memItemRight" valign="bottom"><b>is_specified</b> [MPTag_RollAngle-<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a94c40e328aae0bed810b8043d0d9c013">MPTag_IndividualNum</a>+1]</td></tr>
-<tr class="separator:a7c6f6e4311d99fcdf1f13a6cc1920fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>MP Individual attributes</p>
+<p>See the DC-007_E Specification. Section 5.2.4 Table 5, page 19. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="ae6a992478cb87c3aa2dbd635f9a88ff6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MPFLong IndividualNum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Number of the Individual Image. </p>
+<p>See Section 5.2.4.2 page 20. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7c6f6e4311d99fcdf1f13a6cc1920fbf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean is_specified[<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a01028b3da4fd31aff421d038f1ac229f">MPTag_RollAngle</a>-<a class="el" href="mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a94c40e328aae0bed810b8043d0d9c013">MPTag_IndividualNum</a>+1]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set to true if the value has to be written/was present in the file. Use is_specified[TAG-MPTag_IndividualNum] to get the value </p>
+
+</div>
+</div>
+<a class="anchor" id="a6e824bffe2d45f037c6e9282e96b15b8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MPFLong PanOrientation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Panorama Scanning Orientation. </p>
+<p>Gives the direction, sequence and positioning of the images that comprise the final Panorama Image<br />
+See Section 5.2.4.3 page 20. </p>
+
+</div>
+</div>
+<a class="anchor" id="a300e7c943aa2e5623b56119fbffabd26"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_m_p_f_rational.html">MPFRational</a> PanOverlapH</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Panorama Scanning Orientation. </p>
+<p>Estimated amount of horizontal overlap between two adjacent images, as a percentage.<br />
+See Section 5.2.4.4 page 22. </p>
+
+</div>
+</div>
+<a class="anchor" id="a74c74afe6c6ba0384beee438b1f9f2ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_m_p_f_rational.html">MPFRational</a> PanOverlapV</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Panorama Scanning Orientation. </p>
+<p>Estimated amount of vertical overlap between two adjacent images, as a percentage.<br />
+See Section 5.2.4.4 page 22. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/libmpo/<a class="el" href="mpo_8h_source.html">mpo.h</a></li>
 </ul>
@@ -166,7 +259,7 @@ boolean&#160;</td><td class="memItemRight" valign="bottom"><b>is_specified</b> [
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_m_p_ext___image_attr.html">MPExt_ImageAttr</a></li>
-    <li class="footer">Generated on Sat Mar 14 2015 23:42:25 for Libmpo by
+    <li class="footer">Generated on Sun Mar 15 2015 02:09:23 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

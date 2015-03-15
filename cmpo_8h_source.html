@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">28</span>
+   &#160;<span id="projectnumber">Build #29</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('cmpo_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -122,7 +122,7 @@ $(document).ready(function(){initNavTree('cmpo_8h_source.html','');});
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> <a class="code" href="cmpo_8h.html#a5efc0791077df9af070898380c209490">mpo_quality_forall</a>(<a class="code" href="structmpo__compress__struct.html">mpo_compress_struct</a>* mpoinfo,<span class="keywordtype">int</span> quality);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> <a class="code" href="cmpo_8h.html#ad5abe26eb6384de6552647079ce06c86">mpo_type_forall</a>(<a class="code" href="structmpo__compress__struct.html">mpo_compress_struct</a>* mpoinfo,MPExt_MPType type);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> <a class="code" href="cmpo_8h.html#ad5abe26eb6384de6552647079ce06c86">mpo_type_forall</a>(<a class="code" href="structmpo__compress__struct.html">mpo_compress_struct</a>* mpoinfo,<a class="code" href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07">MPExt_MPType</a> type);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;GLOBAL(<span class="keywordtype">void</span>)</div>
@@ -133,7 +133,8 @@ $(document).ready(function(){initNavTree('cmpo_8h_source.html','');});
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> mpo_init_3d_compress(<a class="code" href="structmpo__compress__struct.html">mpo_compress_struct</a>* mpoinfo,JOCTET *imageBytes_left,JOCTET *imageBytes_right,<span class="keywordtype">int</span> image_width,<span class="keywordtype">int</span> image_height);</div>
 <div class="ttc" id="cmpo_8h_html_a856e10b246526192e1893259bbd442ac"><div class="ttname"><a href="cmpo_8h.html#a856e10b246526192e1893259bbd442ac">mpo_colorspace_forall</a></div><div class="ttdeci">void mpo_colorspace_forall(mpo_compress_struct *mpoinfo, J_COLOR_SPACE jcs, int input_components)</div><div class="ttdoc">Convenience function to set colorspace info of all images at once. </div><div class="ttdef"><b>Definition:</b> cmpo.c:132</div></div>
 <div class="ttc" id="cmpo_8h_html_a5efc0791077df9af070898380c209490"><div class="ttname"><a href="cmpo_8h.html#a5efc0791077df9af070898380c209490">mpo_quality_forall</a></div><div class="ttdeci">void mpo_quality_forall(mpo_compress_struct *mpoinfo, int quality)</div><div class="ttdoc">Convenience function to set quality of all images at once. </div><div class="ttdef"><b>Definition:</b> cmpo.c:145</div></div>
-<div class="ttc" id="structmpo__compress__struct_html"><div class="ttname"><a href="structmpo__compress__struct.html">mpo_compress_struct</a></div><div class="ttdef"><b>Definition:</b> mpo.h:201</div></div>
+<div class="ttc" id="structmpo__compress__struct_html"><div class="ttname"><a href="structmpo__compress__struct.html">mpo_compress_struct</a></div><div class="ttdef"><b>Definition:</b> mpo.h:254</div></div>
+<div class="ttc" id="mpo_8h_html_a049fb1cf8ccab3da2582e6952fc66c07"><div class="ttname"><a href="mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07">MPExt_MPType</a></div><div class="ttdeci">MPExt_MPType</div><div class="ttdef"><b>Definition:</b> mpo.h:133</div></div>
 <div class="ttc" id="cmpo_8h_html_abbaea2ca92f0935310af3eb8117ce8c7"><div class="ttname"><a href="cmpo_8h.html#abbaea2ca92f0935310af3eb8117ce8c7">mpo_dimensions_forall</a></div><div class="ttdeci">void mpo_dimensions_forall(mpo_compress_struct *mpoinfo, int width, int height)</div><div class="ttdoc">Convenience function to set width and height of all images at once. </div><div class="ttdef"><b>Definition:</b> cmpo.c:120</div></div>
 <div class="ttc" id="cmpo_8h_html_a6357ab85ff06161d8e4102ab520e96d4"><div class="ttname"><a href="cmpo_8h.html#a6357ab85ff06161d8e4102ab520e96d4">mpo_image_mem_src</a></div><div class="ttdeci">void mpo_image_mem_src(mpo_compress_struct *mpoinfo, int imageNumber, JOCTET src[])</div><div class="ttdoc">Tell mpoinfo struct what source to use. </div><div class="ttdef"><b>Definition:</b> cmpo.c:113</div></div>
 <div class="ttc" id="cmpo_8h_html_ad5abe26eb6384de6552647079ce06c86"><div class="ttname"><a href="cmpo_8h.html#ad5abe26eb6384de6552647079ce06c86">mpo_type_forall</a></div><div class="ttdeci">void mpo_type_forall(mpo_compress_struct *mpoinfo, MPExt_MPType type)</div><div class="ttdoc">Convenience function to set type of all images at once. </div><div class="ttdef"><b>Definition:</b> cmpo.c:156</div></div>
@@ -143,7 +144,7 @@ $(document).ready(function(){initNavTree('cmpo_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_d2baaf53efa624276349580d96691ae7.html">libmpo</a></li><li class="navelem"><a class="el" href="cmpo_8h.html">cmpo.h</a></li>
-    <li class="footer">Generated on Sat Mar 14 2015 23:42:25 for Libmpo by
+    <li class="footer">Generated on Sun Mar 15 2015 02:09:23 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

@@ -23,7 +23,16 @@ var searchData=
   ['mptag_5fpanoverlaph',['MPTag_PanOverlapH',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a6274bb4ce05c7c76d859b6f46dafdf00',1,'mpo.h']]],
   ['mptag_5fpanoverlapv',['MPTag_PanOverlapV',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602abe068fc2fa27b93b9dd3e443a28a3fd9',1,'mpo.h']]],
   ['mptag_5fpitchangle',['MPTag_PitchAngle',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a216cb578a268a8a3583b0fbe5ba4b498',1,'mpo.h']]],
+  ['mptag_5frollangle',['MPTag_RollAngle',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a01028b3da4fd31aff421d038f1ac229f',1,'mpo.h']]],
   ['mptag_5ftotalframes',['MPTag_TotalFrames',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a7a1933965e2c6a020680e40a5d70495f',1,'mpo.h']]],
   ['mptag_5fverticaldivergence',['MPTag_VerticalDivergence',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a7c815986b19de33b847960c6fc07446f',1,'mpo.h']]],
-  ['mptag_5fyawangle',['MPTag_YawAngle',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a969700bfe220252c5ef32fc247079d6b',1,'mpo.h']]]
+  ['mptag_5fyawangle',['MPTag_YawAngle',['../mpo_8h.html#a026f15987e14cbf63c3a44f18d358602a969700bfe220252c5ef32fc247079d6b',1,'mpo.h']]],
+  ['mptype_5fbaseline',['MPType_Baseline',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07aa9a70894ed3d4cf8ce9fa93b3ffb7101',1,'mpo.h']]],
+  ['mptype_5flargethumbnail_5fclass1',['MPType_LargeThumbnail_Class1',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a33ab52d0f21985d9500e81aaf709be2a',1,'mpo.h']]],
+  ['mptype_5flargethumbnail_5fclass2',['MPType_LargeThumbnail_Class2',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a349dee68a7c6f09b3e9a7f60d65c6d63',1,'mpo.h']]],
+  ['mptype_5flargethumbnail_5fmask',['MPType_LargeThumbnail_Mask',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a933b86af5cc7a3771eaf0c0e2e349261',1,'mpo.h']]],
+  ['mptype_5fmultiframe_5fdisparity',['MPType_MultiFrame_Disparity',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a9cba9b8453f9bd27f4b2e0297b105aa1',1,'mpo.h']]],
+  ['mptype_5fmultiframe_5fmask',['MPType_MultiFrame_Mask',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a99ae55d4b2e3895b84302871b9e31f47',1,'mpo.h']]],
+  ['mptype_5fmultiframe_5fmultiangle',['MPType_MultiFrame_MultiAngle',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a6d5fbfb75f7a307fe4a0a1bb76a36bd7',1,'mpo.h']]],
+  ['mptype_5fmultiframe_5fpanorama',['MPType_MultiFrame_Panorama',['../mpo_8h.html#a049fb1cf8ccab3da2582e6952fc66c07a0e2cfc55a220b7c57cbb2acb2c790406',1,'mpo.h']]]
 ];
