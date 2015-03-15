@@ -58,7 +58,7 @@ typedef MPFbuffer * MPFbuffer_ptr;
 /**Byte order of the data
  *
  * See the DC-007_E Specification.
- * 5.2.2.1  Table 3, page 13
+ * Section 5.2.2.1 Table 3, page 13
  */
 typedef enum{ MPF_LITTLE_ENDIAN = 0x49492A00,
     MPF_BIG_ENDIAN = 0x4D4D002A }MPExt_ByteOrder;
@@ -66,7 +66,7 @@ typedef enum{ MPF_LITTLE_ENDIAN = 0x49492A00,
 /** MP format tags
  *
  * See the DC-007_E Specification.
- * 5.2.2.3  Table 3, page 13
+ * Section 5.2.2.3 Table 3, page 13
  */
 typedef enum
 {
@@ -103,7 +103,7 @@ typedef enum
     MPTag_AxisDistanceZ     = 0xb20a,
     MPTag_YawAngle          = 0xb20b,
     MPTag_PitchAngle        = 0xb20c,
-    MPTag_RollAngle         = 0xb20d
+    MPTag_RollAngle         = 0xb20d,
 
     ///@}
 }MPExt_MPTags;
@@ -122,16 +122,24 @@ typedef union
 }
 MPExt_IndividualImageAttr;
 
+
+/**
+ * MP Format types
+ *
+ * See the DC-007_E Specification.
+ * Section 5.2.3.3.1 Table 4, page 16.\n
+ * Each type may have subtypes
+ */
 typedef enum
 {
-    MPType_LargeThumbnail_Mask  =0x10000,
-    MPType_LargeThumbnail_Class1=0x10001, /*VGA Equivalent*/
-    MPType_LargeThumbnail_Class2=0x10002, /*Full HD Equivalent*/
-    MPType_MultiFrame_Mask      =0x20000,
-    MPType_MultiFrame_Panorama  =0x20001,
-    MPType_MultiFrame_Disparity =0x20002,
-    MPType_MultiFrame_MultiAngle=0x20003,
-    MPType_Baseline             =0x30000
+    MPType_LargeThumbnail_Mask  =0x10000, /*!<Used to check if an image is of type Large Thumbnail*/
+    MPType_LargeThumbnail_Class1=0x10001, /*!<Large Thumbnail | Class 1 (VGA Equivalent)*/
+    MPType_LargeThumbnail_Class2=0x10002, /*!<Large Thumbnail | Class 2 (Full HD Equivalent)*/
+    MPType_MultiFrame_Mask      =0x20000, /*!<Used to check if an image is of type Multi-Frame Image*/
+    MPType_MultiFrame_Panorama  =0x20001, /*!<Multi-Frame Image | Panorama*/
+    MPType_MultiFrame_Disparity =0x20002, /*!<Multi-Frame Image | Disparity*/
+    MPType_MultiFrame_MultiAngle=0x20003, /*!<Multi-Frame Image | Multi-Angle*/
+    MPType_Baseline             =0x30000  /*!<Baseline MP Primary Image*/
 }
 MPExt_MPType;
 
@@ -153,24 +161,69 @@ typedef struct
 }
 MPExt_MPEntry;
 
+/**MP Individual attributes
+ *
+ * See the DC-007_E Specification.
+ * Section 5.2.4 Table 5, page 19.
+ */
 typedef struct
 {
+    /**\brief Number of the Individual Image.
+    *
+    * See Section 5.2.4.2 page 20. */
     MPFLong IndividualNum;
+
+    /// \name Panorama Images attributes
+    ///@{
+    /**\brief Panorama Scanning Orientation
+    *
+    * Gives the direction, sequence and positioning of the images that comprise the final Panorama Image\n
+    * See Section 5.2.4.3 page 20. */
     MPFLong PanOrientation;
+    /**\brief Panorama Scanning Orientation
+    *
+    * Estimated amount of horizontal overlap between two adjacent images, as a percentage.\n
+    * See Section 5.2.4.4 page 22. */
     MPFRational PanOverlapH;
+    /**\brief Panorama Scanning Orientation
+    *
+    * Estimated amount of vertical overlap between two adjacent images, as a percentage.\n
+    * See Section 5.2.4.4 page 22. */
     MPFRational PanOverlapV;
+    ///@}
+
+    /// \name Multi-View Images attributes
+    /// \brief Used for Disparity and Multi-Angles Images
+    ///@{
     MPFLong BaseViewpointNum;
     MPFSRational ConvergenceAngle;
     MPFRational BaselineLength;
     MPFSRational VerticalDivergence;
+    ///@}
+
+    /// \name Relative distance to the Target Object
+    ///@{
     MPFSRational AxisDistanceX;
     MPFSRational AxisDistanceY;
     MPFSRational AxisDistanceZ;
+    ///@}
+
+    /** \name Relative angle to the Target Object
+     * See the Section 5.2.4.10 page 26 or the Annex A.11.Multi-Angle Image Examples page 53
+     */
+    ///@{
+    /** \brief Vertical axis angle*/
     MPFSRational YawAngle;
+    /** \brief Horizontal axis angle*/
     MPFSRational PitchAngle;
+    /** \brief Collimation axis angle*/
     MPFSRational RollAngle;
-    boolean is_specified[MPTag_RollAngle-MPTag_IndividualNum+1];/*Set to true if the value has to be written/was present in the file*/
-    /*Use is_specified[TAG-MPTag_IndividualNum] to get the value*/
+    ///@}
+    /**
+     * Set to true if the value has to be written/was present in the file.
+     * Use is_specified[TAG-MPTag_IndividualNum] to get the value
+     */
+    boolean is_specified[MPTag_RollAngle-MPTag_IndividualNum+1];
 }
 MPExt_ImageAttr;
 
@@ -209,7 +262,7 @@ mpo_compress_struct;
 
 typedef struct
 {
-    MPExt_Data *APP02;
+    MPExt_Data* APP02;
     struct jpeg_decompress_struct *cinfo;
     JOCTET ** images_data;
 }
