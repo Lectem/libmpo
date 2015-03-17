@@ -15,9 +15,7 @@ void mpo_destroy_compress(mpo_compress_struct* mpoinfo);
 /** \brief Tell mpoinfo struct what source to use
  *
  * \param imageNumber   The index of the image we are working on
- * \param data          An array of data, shall be freed by the user
- * \param width         Image's width in pixels
- * \param height        Image's height in pixels
+ * \param src          An array of data, shall be freed by the user
  *
  */
 void mpo_image_mem_src(mpo_compress_struct* mpoinfo,int imageNumber,JOCTET src[]);

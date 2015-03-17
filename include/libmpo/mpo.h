@@ -15,7 +15,7 @@
 
 /**
  * \file mpo.h
- * \brief Data structures and definitions related to mpo files
+ * @brief Data structures and definitions related to mpo files
  * \author Lectem
  */
 
@@ -88,21 +88,35 @@ typedef enum
     MPTag_TotalFrames       = 0xB004,
     ///@}
 
+    ///@brief Individual image tags (attributes)
     ///@{
-    ///Individual image tags (attributes)
+    /**@see MPExt_ImageAttr.IndividualNum*/
     MPTag_IndividualNum     = 0xb101,
+    /**@see MPExt_ImageAttr.PanOrientation*/
     MPTag_PanOrientation    = 0xb201,
+    /**@see MPExt_ImageAttr.PanOverlapH*/
     MPTag_PanOverlapH       = 0xb202,
+    /**@see MPExt_ImageAttr.PanOverlapV*/
     MPTag_PanOverlapV       = 0xb203,
+    /**@see MPExt_ImageAttr.BaseViewpointNum*/
     MPTag_BaseViewpointNum  = 0xb204,
+    /**@see MPExt_ImageAttr.ConvergenceAngle*/
     MPTag_ConvergenceAngle  = 0xb205,
+    /**@see MPExt_ImageAttr.BaselineLength*/
     MPTag_BaselineLength    = 0xb206,
+    /**@see MPExt_ImageAttr.VerticalDivergence*/
     MPTag_VerticalDivergence= 0xb207,
+    /**@see MPExt_ImageAttr.AxisDistanceX*/
     MPTag_AxisDistanceX     = 0xb208,
+    /**@see MPExt_ImageAttr.AxisDistanceY*/
     MPTag_AxisDistanceY     = 0xb209,
+    /**@see MPExt_ImageAttr.AxisDistanceZ*/
     MPTag_AxisDistanceZ     = 0xb20a,
+    /**@see MPExt_ImageAttr.YawAngle*/
     MPTag_YawAngle          = 0xb20b,
+    /**@see MPExt_ImageAttr.PitchAngle*/
     MPTag_PitchAngle        = 0xb20c,
+    /**@see MPExt_ImageAttr.RollAngle*/
     MPTag_RollAngle         = 0xb20d,
 
     ///@}
@@ -148,8 +162,7 @@ typedef struct
     MPFShort type;
     MPFLong EntriesTabLength;
     MPFLong dataOffset;
-}
-MPExt_MPEntryIndexFields;
+} MPExt_MPEntryIndexFields;
 
 typedef struct
 {
@@ -158,8 +171,7 @@ typedef struct
     MPFLong offset;
     MPFShort dependentImageEntry1;
     MPFShort dependentImageEntry2;
-}
-MPExt_MPEntry;
+} MPExt_MPEntry;
 
 /**MP Individual attributes
  *
@@ -168,32 +180,32 @@ MPExt_MPEntry;
  */
 typedef struct
 {
-    /**\brief Number of the Individual Image.
+    /**@brief Number of the Individual Image.
     *
     * See Section 5.2.4.2 page 20. */
     MPFLong IndividualNum;
 
-    /// \name Panorama Images attributes
+    ///@name Panorama Images attributes
     ///@{
-    /**\brief Panorama Scanning Orientation
+    /**@brief Panorama Scanning Orientation
     *
     * Gives the direction, sequence and positioning of the images that comprise the final Panorama Image\n
     * See Section 5.2.4.3 page 20. */
     MPFLong PanOrientation;
-    /**\brief Panorama Scanning Orientation
+    /**@brief Panorama Scanning Orientation
     *
     * Estimated amount of horizontal overlap between two adjacent images, as a percentage.\n
     * See Section 5.2.4.4 page 22. */
     MPFRational PanOverlapH;
-    /**\brief Panorama Scanning Orientation
+    /**@brief Panorama Scanning Orientation
     *
     * Estimated amount of vertical overlap between two adjacent images, as a percentage.\n
     * See Section 5.2.4.4 page 22. */
     MPFRational PanOverlapV;
     ///@}
 
-    /// \name Multi-View Images attributes
-    /// \brief Used for Disparity and Multi-Angles Images
+    ///@name Multi-View Images attributes
+    ///@brief Used for Disparity and Multi-Angles Images
     ///@{
     MPFLong BaseViewpointNum;
     MPFSRational ConvergenceAngle;
@@ -201,22 +213,22 @@ typedef struct
     MPFSRational VerticalDivergence;
     ///@}
 
-    /// \name Relative distance to the Target Object
+    ///@name Relative distance to the Target Object
     ///@{
     MPFSRational AxisDistanceX;
     MPFSRational AxisDistanceY;
     MPFSRational AxisDistanceZ;
     ///@}
 
-    /** \name Relative angle to the Target Object
+    /**@name Relative angle to the Target Object
      * See the Section 5.2.4.10 page 26 or the Annex A.11.Multi-Angle Image Examples page 53
      */
     ///@{
-    /** \brief Vertical axis angle*/
+    /**@brief Vertical axis angle*/
     MPFSRational YawAngle;
-    /** \brief Horizontal axis angle*/
+    /**@brief Horizontal axis angle*/
     MPFSRational PitchAngle;
-    /** \brief Collimation axis angle*/
+    /**@brief Collimation axis angle*/
     MPFSRational RollAngle;
     ///@}
     /**
@@ -224,49 +236,45 @@ typedef struct
      * Use is_specified[TAG-MPTag_IndividualNum] to get the value
      */
     boolean is_specified[MPTag_RollAngle-MPTag_IndividualNum+1];
-}
-MPExt_ImageAttr;
+} MPExt_ImageAttr;
 
 #define ATTR_IS_SPECIFIED(attr,tag) ((attr).is_specified[(tag)-MPTag_IndividualNum])
 
 
 typedef struct
 {
-    MPFUndefined MPF_identifier[4];
-    MPExt_ByteOrder byte_order;
-    MPFLong first_IFD_offset;
+    MPFUndefined MPF_identifier[4];     /*!<Always MPF\0*/
+    MPExt_ByteOrder byte_order;         /*!<The endianness used in the file. The offset starts at the location of this value.*/
+    MPFLong first_IFD_offset;           /*!<Offset of the first IFD of the image*/
     /*MP Index IFD*/
-    INT16 count;
-    char version[4];
-    MPFLong numberOfImages;
+    INT16 count;                        /*!<Count of the MP index IFD*/
+    char version[4];                    /*!<Should always be 0100*/
+    MPFLong numberOfImages;             /*!<Number of Individual images*/
     MPFLong currentEntry;
-    MPExt_MPEntryIndexFields EntryIndex;
-    MPFLong nextIFDOffset;
+    MPExt_MPEntryIndexFields EntryIndex;/*!<Number of entries and offset to the MP Entry data of each image*/
+    MPFLong nextIFDOffset;              /*!<Offset of the next IFD. Used only in the first image*/
 
-    MPFShort count_attr_IFD;
+    MPFShort count_attr_IFD;            /*!<Number of Tags in the attributes IFD of the current image*/
+    MPExt_ImageAttr attributes;         /*!<Individual images attributes*/
 
-    MPExt_MPEntry* MPentry;
+    MPExt_MPEntry* MPentry;             /*!<Available in 1st image only, details about each Individual image*/
 
-    MPExt_ImageAttr attributes;
-}
-MPExt_Data;
+} MPExt_Data;
 
 typedef struct
 {
-    MPExt_Data* APP02;
+    MPExt_Data* APP02;/*!<Array of each image data*/
     struct jpeg_compress_struct *cinfo;
-    JOCTET ** images_data;
-}
-mpo_compress_struct;
+    JOCTET ** images_data;/*!<Array pointing to each image data, used only when writing the whole MPO at once*/
+} mpo_compress_struct;
 
 
 typedef struct
 {
-    MPExt_Data* APP02;
+    MPExt_Data* APP02;/*!<Array of each image data*/
     struct jpeg_decompress_struct *cinfo;
-    JOCTET ** images_data;
-}
-mpo_decompress_struct;
+    JOCTET ** images_data;/*!<Array pointing to each image data, used only when decoding the whole MPO at once*/
+} mpo_decompress_struct;
 
 
 void decompress_mpo(char* filename);
