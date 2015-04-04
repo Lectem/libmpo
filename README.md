@@ -1,6 +1,7 @@
 A future library to decode and encode MPO (multiple picture object) files.
 Those are used mainly for 3D cameras and the Nintendo 3DS.
 
+##Current Status : [![Build Status](https://travis-ci.org/Lectem/libmpo.svg?branch=master)](https://travis-ci.org/Lectem/libmpo)
 
 ##Main goal :
 - Load / Write Stereoscopic 3D images (Multi-frame Disparity) through libjpeg.

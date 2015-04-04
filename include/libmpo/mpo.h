@@ -215,8 +215,11 @@ typedef struct
 
     ///@name Relative distance to the Target Object
     ///@{
+    /**@brief Distance to the Vertical axis of the Target Object*/
     MPFSRational AxisDistanceX;
+    /**@brief Distance to the Horizontal axis of the Target Object*/
     MPFSRational AxisDistanceY;
+    /**@brief Distance to the Collimation axis of the Target Object*/
     MPFSRational AxisDistanceZ;
     ///@}
 
