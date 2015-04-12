@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">Build #32</span>
+   &#160;<span id="projectnumber">Build #33</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -110,6 +110,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 </ul>
 <h3>Currently working :</h3>
 <ul>
+<li>Decompression (see examples/decompress.c)</li>
 <li>Basic compression</li>
 <li>Compression of 3d stereo files, compatible with Nintendo 3DS and NVidia 3D viewer. Look at the example for more details</li>
 </ul>
@@ -121,16 +122,16 @@ $(document).ready(function(){initNavTree('index.html','');});
 <p>The doxygen documentation is automatically generated after each commit. You can find it <a href="http://lectem.github.io/libmpo/">here</a>.</p>
 <h2>TODO (In <em>order</em> of priority):</h2>
 <ul>
-<li>Compression : add attributes</li>
-<li>Give a good interface for compression and decompression</li>
+<li>Give a good interface for compression</li>
 <li>Simplify usage of MPF attributes</li>
+<li>Decompression : fix the image attributes parsing</li>
 <li>A good refactoring</li>
 <li>Remove printf and other debugging stuff</li>
 <li>Everything else</li>
 </ul>
 <h2>Will not be done :</h2>
 <ul>
-<li>Exif and other markers support (you will be able to write/read it trough your own handlers and libjpeg)</li>
+<li>Exif and other markers support (you should be able to write/read it trough your own handlers and libjpeg)</li>
 </ul>
 <h3>Might not be done :</h3>
 <ul>
@@ -141,7 +142,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 12 2015 11:47:32 for Libmpo by
+    <li class="footer">Generated on Sun Apr 12 2015 12:00:47 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>
