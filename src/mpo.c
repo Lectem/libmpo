@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <stdbool.h>
+#include <libmpo/mpo.h>
 #include "libmpo/mpo.h"
 
 
@@ -145,78 +147,77 @@ boolean print_APP02_MPF (MPExt_Data *data)
     mpo_printf("\n\n-------------MPF extension data-------------\n");
     mpo_printf("MPF version:\t\t%.4s\n",data->version);
     if(data->byte_order == MPF_LITTLE_ENDIAN)
-        mpo_printf("Byte order:\tlittle endian\n");
+        mpo_printf("Byte order:\t\tlittle endian\n");
     else if(data->byte_order == MPF_BIG_ENDIAN)
-        mpo_printf("Byte order:\tbig endian\n");
+        mpo_printf("Byte order:\t\tbig endian\n");
     else mpo_printf("Couldn't recognize byte order : 0x%x\n",data->byte_order);
     mpo_printf("First IFD offset:\t0x%x\n",(unsigned int)data->first_IFD_offset);
     mpo_printf("---MP Index IFD---\n");
     mpo_printf("Count:\t\t\t%d(0x%x)\n",data->count,data->count);
-    mpo_printf("Number of images:\t%d\n",data->numberOfImages);
-    if(data->currentEntry>0)mpo_printf("%d entries listed\n",data->currentEntry);
+    if(data->numberOfImages>0) {
+        mpo_printf("Number of images:\t%d\n", data->numberOfImages);
+        if (data->currentEntry > 0)mpo_printf("%d entries listed\n", data->currentEntry);
 
-    mpo_printf("----------\n");
-    for(i=0; i<data->currentEntry; ++i)
-    {
-        mpo_printf("\tSize:\t\t%d\n\tOffset:\t\t%d\n",data->MPentry[i].size,data->MPentry[i].offset);
-        mpo_printf("\tDepImageEntry1:\t%d\n",data->MPentry[i].dependentImageEntry1);
-        mpo_printf("\tDepImageEntry2:\t%d\n",data->MPentry[i].dependentImageEntry2);
-        if(data->MPentry[i].individualImgAttr.data.imgType == 0)mpo_printf("\tData format:\tJPEG\n");
-        mpo_printf("\tImage type:\t");
-        switch(data->MPentry[i].individualImgAttr.data.MPTypeCode)
-        {
-            case MPType_LargeThumbnail_Class1:
-                mpo_printf("Large Thumbnail (VGA)\n");
-                break;
-            case MPType_LargeThumbnail_Class2:
-                mpo_printf("Large Thumbnail (Full-HD)\n");
-                break;
-            case MPType_MultiFrame_Panorama  :
-                mpo_printf("Multi-Frame Panorama\n");
-                break;
-            case MPType_MultiFrame_Disparity :
-                mpo_printf("Multi-Frame Disparity\n");
-                break;
-            case MPType_MultiFrame_MultiAngle:
-                mpo_printf("Multi-Frame Multi-Angle\n");
-                break;
-            case MPType_Baseline             :
-                mpo_printf("Baseline\n");
-                break;
-            default:
-                mpo_printf("UNDEFINED! 0x%x(value=0x%x)\n",
-                       data->MPentry[i].individualImgAttr.data.MPTypeCode,
-                       (unsigned int)data->MPentry[i].individualImgAttr.value);
-        }
-        if(data->MPentry[i].individualImgAttr.data.dependentChild)mpo_printf("\tDependent child image\n");
-        if(data->MPentry[i].individualImgAttr.data.dependentParent)mpo_printf("\tDependent parent image\n");
-        if(data->MPentry[i].individualImgAttr.data.representativeImage)mpo_printf("\tRepresentative image\n");
+        mpo_printf("----------\n");
+        for (i = 0; i < data->currentEntry; ++i) {
+            mpo_printf("\tSize:\t\t%d\n\tOffset:\t\t%d\n", data->MPentry[i].size, data->MPentry[i].offset);
+            mpo_printf("\tDepImageEntry1:\t%d\n", data->MPentry[i].dependentImageEntry1);
+            mpo_printf("\tDepImageEntry2:\t%d\n", data->MPentry[i].dependentImageEntry2);
+            if (data->MPentry[i].individualImgAttr.data.imgType == 0)mpo_printf("\tData format:\tJPEG\n");
+            mpo_printf("\tImage type:\t");
+            switch (data->MPentry[i].individualImgAttr.data.MPTypeCode) {
+                case MPType_LargeThumbnail_Class1:
+                    mpo_printf("\tLarge Thumbnail (VGA)\n");
+                    break;
+                case MPType_LargeThumbnail_Class2:
+                    mpo_printf("\tLarge Thumbnail (Full-HD)\n");
+                    break;
+                case MPType_MultiFrame_Panorama  :
+                    mpo_printf("\tMulti-Frame Panorama\n");
+                    break;
+                case MPType_MultiFrame_Disparity :
+                    mpo_printf("\tMulti-Frame Disparity\n");
+                    break;
+                case MPType_MultiFrame_MultiAngle:
+                    mpo_printf("\tMulti-Frame Multi-Angle\n");
+                    break;
+                case MPType_Baseline             :
+                    mpo_printf("\tBaseline\n");
+                    break;
+                default:
+                    mpo_printf("\tUNDEFINED! 0x%x(value=0x%x)\n",
+                               data->MPentry[i].individualImgAttr.data.MPTypeCode,
+                               (unsigned int) data->MPentry[i].individualImgAttr.value);
+            }
+            if (data->MPentry[i].individualImgAttr.data.dependentChild)mpo_printf("\tDependent child image\n");
+            if (data->MPentry[i].individualImgAttr.data.dependentParent)mpo_printf("\tDependent parent image\n");
+            if (data->MPentry[i].individualImgAttr.data.representativeImage)mpo_printf("\tRepresentative image\n");
 
-#define print_attr(TagType,fieldname,name)\
+#define print_attr(TagType, fieldname, name)\
         {if(ATTR_IS_SPECIFIED(data->attributes,MPTag_ ## fieldname))\
         {\
-            mpo_printf(name ": ");\
+            mpo_printf("\t" name ": ");\
             print_ ## TagType (data->attributes.fieldname);\
             mpo_printf("\n");\
         }}
 
-        print_attr(MPFLong,     IndividualNum,      "MP Individual Number\t\t");
-        print_attr(MPFLong,     PanOrientation,     "Panorama Scanning orientation\t");
-        print_attr(MPFRational, PanOverlapH,        "Panorama Horizontal Overlap\t");
-        print_attr(MPFRational, PanOverlapV,        "Panorama Vertical Overlap\t");
-        print_attr(MPFLong,     BaseViewpointNum,   "Base Viewpoint Number\t\t");
-        print_attr(MPFSRational,ConvergenceAngle,   "Convergence angle\t\t");
-        print_attr(MPFRational, BaselineLength,     "Baseline Length\t\t\t");
-        print_attr(MPFSRational,VerticalDivergence, "Vertical Divergence Angle\t");
-        print_attr(MPFSRational,AxisDistanceX,      "Horizontal Axis (X) distance\t");
-        print_attr(MPFSRational,AxisDistanceY,      "Vertical Axis (Y) distance\t");
-        print_attr(MPFSRational,AxisDistanceZ,      "Collimation Axis (Z) distance\t");
-        print_attr(MPFSRational,YawAngle,           "Yaw angle\t\t\t\t");
-        print_attr(MPFSRational,PitchAngle,         "Pitch angle\t\t\t\t");
-        print_attr(MPFSRational,RollAngle,          "Roll angle\t\t\t\t");
-        mpo_printf("----------\n");
+            print_attr(MPFLong, IndividualNum, "MP Individual Number\t\t");
+            print_attr(MPFLong, PanOrientation, "Panorama Scanning orientation\t");
+            print_attr(MPFRational, PanOverlapH, "Panorama Horizontal Overlap\t");
+            print_attr(MPFRational, PanOverlapV, "Panorama Vertical Overlap\t");
+            print_attr(MPFLong, BaseViewpointNum, "Base Viewpoint Number\t\t");
+            print_attr(MPFSRational, ConvergenceAngle, "Convergence angle\t\t");
+            print_attr(MPFRational, BaselineLength, "Baseline Length\t\t\t");
+            print_attr(MPFSRational, VerticalDivergence, "Vertical Divergence Angle\t");
+            print_attr(MPFSRational, AxisDistanceX, "Horizontal Axis (X) distance\t");
+            print_attr(MPFSRational, AxisDistanceY, "Vertical Axis (Y) distance\t");
+            print_attr(MPFSRational, AxisDistanceZ, "Collimation Axis (Z) distance\t");
+            print_attr(MPFSRational, YawAngle, "Yaw angle\t\t\t\t");
+            print_attr(MPFSRational, PitchAngle, "Pitch angle\t\t\t\t");
+            print_attr(MPFSRational, RollAngle, "Roll angle\t\t\t\t");
+            mpo_printf("----------\n");
+        }
     }
-
 
     mpo_printf("-----------------End of MPF-----------------\n\n\n");
     return TRUE;
@@ -362,7 +363,7 @@ int MPExtReadIndexIFD (MPFbuffer_ptr b,MPExt_Data *data, int swapEndian)
 }
 
 
-boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
+bool MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
 {
     int i;
     long length=b->_size;
@@ -385,8 +386,6 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
 
     if(isFirstImage)
     {
-        mpo_printf("%ld != %ld\n",OFFSET_START - data->first_IFD_offset,length);
-
         length-=MPExtReadIndexIFD(b,data,endiannessSwap);
     }
 
@@ -405,7 +404,7 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
     }
 
     // TODO : add attrIFD
-
+    mpo_printf("Please note that images attributes are not correct yet.\n");
     mpo_printf("bytes remaining : %ld\n",length);
     while(length-- >0)
     {
@@ -413,9 +412,6 @@ boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage)
     }
     mpo_printf("\n");
     print_APP02_MPF(data);
-
-
-
 
     return 1;
 }

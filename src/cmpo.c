@@ -98,7 +98,6 @@ void mpo_destroy_compress(mpo_compress_struct* mpoinfo)
 
     if(mpoinfo->images_data)free(mpoinfo->images_data);
     mpoinfo->images_data=NULL;
-
 }
 
 /** \brief Tell mpoinfo struct what source to use

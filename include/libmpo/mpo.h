@@ -6,6 +6,7 @@
 
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef NDEBUG
 #define mpo_printf(args...)	((void)0)
@@ -247,6 +248,7 @@ typedef struct
 typedef struct
 {
     MPFUndefined MPF_identifier[4];     /*!<Always MPF\0*/
+    size_t start_of_offset;             /*!<The position of the start of this image MPO offset in the file*/
     MPExt_ByteOrder byte_order;         /*!<The endianness used in the file. The offset starts at the location of this value.*/
     MPFLong first_IFD_offset;           /*!<Offset of the first IFD of the image*/
     /*MP Index IFD*/
@@ -272,23 +274,9 @@ typedef struct
 } mpo_compress_struct;
 
 
-typedef struct
-{
-    MPExt_Data* APP02;/*!<Array of each image data*/
-    struct jpeg_decompress_struct *cinfo;
-    JOCTET ** images_data;/*!<Array pointing to each image data, used only when decoding the whole MPO at once*/
-} mpo_decompress_struct;
-
-
-void decompress_mpo(char* filename);
-void decompress_mpo_from_mem(unsigned char* src,long size,int isFirstImage);
-boolean MPExtReadAPP02AsFirstImage(j_decompress_ptr cinfo);
-boolean MPExtReadAPP02 (j_decompress_ptr cinfo);
-
-
+bool MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage);
 
 char isLittleEndian();
-boolean MPExtReadMPF (MPFbuffer_ptr b,MPExt_Data *data,int isFirstImage);
 void destroyMPF_Data(MPExt_Data *data);
 
 
