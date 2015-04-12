@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.7"/>
-<title>Libmpo: mpo_decompress_struct Struct Reference</title>
+<title>Libmpo: my_source_mgr Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">Build #31</span>
+   &#160;<span id="projectnumber">Build #32</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -85,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('structmpo__decompress__struct.html','');});
+$(document).ready(function(){initNavTree('structmy__source__mgr.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -106,57 +106,38 @@ $(document).ready(function(){initNavTree('structmpo__decompress__struct.html',''
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">mpo_decompress_struct Struct Reference</div>  </div>
+<div class="title">my_source_mgr Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a6f7bb0b41577254753d47955d7b97882"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpo__decompress__struct.html#a6f7bb0b41577254753d47955d7b97882">APP02</a></td></tr>
-<tr class="separator:a6f7bb0b41577254753d47955d7b97882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7274ef130e8a401d92c505cd4ba31c12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7274ef130e8a401d92c505cd4ba31c12"></a>
-struct jpeg_decompress_struct *&#160;</td><td class="memItemRight" valign="bottom"><b>cinfo</b></td></tr>
-<tr class="separator:a7274ef130e8a401d92c505cd4ba31c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90d622e505e27fc68500a9318b85b447"><td class="memItemLeft" align="right" valign="top">JOCTET **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpo__decompress__struct.html#a90d622e505e27fc68500a9318b85b447">images_data</a></td></tr>
-<tr class="separator:a90d622e505e27fc68500a9318b85b447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08cd767bebf8cecc3d859191d67a4955"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a08cd767bebf8cecc3d859191d67a4955"></a>
+struct jpeg_source_mgr&#160;</td><td class="memItemRight" valign="bottom"><b>pub</b></td></tr>
+<tr class="separator:a08cd767bebf8cecc3d859191d67a4955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af19157da745ecb3f2b088c8f3a10c0a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af19157da745ecb3f2b088c8f3a10c0a7"></a>
+FILE *&#160;</td><td class="memItemRight" valign="bottom"><b>infile</b></td></tr>
+<tr class="separator:af19157da745ecb3f2b088c8f3a10c0a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab52519326423db6890165ce4f4d3d818"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab52519326423db6890165ce4f4d3d818"></a>
+JOCTET *&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b></td></tr>
+<tr class="separator:ab52519326423db6890165ce4f4d3d818"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34ad202f834df4cfab94b6d7532b737a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34ad202f834df4cfab94b6d7532b737a"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>start_of_file</b></td></tr>
+<tr class="separator:a34ad202f834df4cfab94b6d7532b737a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51d892b04b5d303e39f194a7915862ed"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51d892b04b5d303e39f194a7915862ed"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>buffer_file_offset</b></td></tr>
+<tr class="separator:a51d892b04b5d303e39f194a7915862ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Field Documentation</h2>
-<a class="anchor" id="a6f7bb0b41577254753d47955d7b97882"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a>* APP02</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Array of each image data </p>
-
-</div>
-</div>
-<a class="anchor" id="a90d622e505e27fc68500a9318b85b447"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">JOCTET** images_data</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Array pointing to each image data, used only when decoding the whole MPO at once </p>
-
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/libmpo/<a class="el" href="mpo_8h_source.html">mpo.h</a></li>
+<li>include/libmpo/<a class="el" href="mpodatasrc_8h_source.html">mpodatasrc.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structmpo__decompress__struct.html">mpo_decompress_struct</a></li>
-    <li class="footer">Generated on Sat Apr 4 2015 21:17:15 for Libmpo by
+    <li class="navelem"><a class="el" href="structmy__source__mgr.html">my_source_mgr</a></li>
+    <li class="footer">Generated on Sun Apr 12 2015 11:47:32 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

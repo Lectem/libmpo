@@ -11,5 +11,6 @@ var struct_m_p_ext___data =
     [ "MPF_identifier", "struct_m_p_ext___data.html#ad2dda431fce30dd9bd350be6b532dfe2", null ],
     [ "nextIFDOffset", "struct_m_p_ext___data.html#a6f9440c55ff573df53b4138648c1e35d", null ],
     [ "numberOfImages", "struct_m_p_ext___data.html#a7caad4cd531586937bab3a11107f8eea", null ],
+    [ "start_of_offset", "struct_m_p_ext___data.html#a5baf952da1716ff189a7f58f296e0a0a", null ],
     [ "version", "struct_m_p_ext___data.html#a2930bfa85b6a0535647d927a31837680", null ]
 ];

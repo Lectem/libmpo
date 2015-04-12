@@ -9,7 +9,6 @@ var mpo_8h =
     [ "MPExt_ImageAttr", "struct_m_p_ext___image_attr.html", "struct_m_p_ext___image_attr" ],
     [ "MPExt_Data", "struct_m_p_ext___data.html", "struct_m_p_ext___data" ],
     [ "mpo_compress_struct", "structmpo__compress__struct.html", "structmpo__compress__struct" ],
-    [ "mpo_decompress_struct", "structmpo__decompress__struct.html", "structmpo__decompress__struct" ],
     [ "ATTR_IS_SPECIFIED", "mpo_8h.html#a93e0308cb95cd0d758bd1ec0ea417410", null ],
     [ "mpo_printf", "mpo_8h.html#a823f47855887a9516915eb04b44b3604", null ],
     [ "MPFAscii", "mpo_8h.html#a297fb000abb4fdcc50915f8ee1755a92", null ],
@@ -66,11 +65,7 @@ var mpo_8h =
       [ "MPF_SLONG", "mpo_8h.html#adb84dd616d1a77c5dea810b447657e36a9f83d6c205172e1c515151f33239df29", null ],
       [ "MPF_SRATIONAL", "mpo_8h.html#adb84dd616d1a77c5dea810b447657e36aa301e94621dd84c4e4a36af64eee6041", null ]
     ] ],
-    [ "decompress_mpo", "mpo_8h.html#ae861a478dd8a2e3f9ae312c98f4c0fbf", null ],
-    [ "decompress_mpo_from_mem", "mpo_8h.html#a5a5292d1cac36daaafb744b54df7b6b9", null ],
     [ "destroyMPF_Data", "mpo_8h.html#a7693a9fc1571b76eeb781751bd110c37", null ],
     [ "isLittleEndian", "mpo_8h.html#a69b441ebf55e694fe35f9135bf951c4d", null ],
-    [ "MPExtReadAPP02", "mpo_8h.html#acc3fb561b9b2a71ac67b5035146f4fb4", null ],
-    [ "MPExtReadAPP02AsFirstImage", "mpo_8h.html#a7479dd533f656d1db59a606ad013f15b", null ],
-    [ "MPExtReadMPF", "mpo_8h.html#a07ea329e8ad62846b81fccd3531c0d6e", null ]
+    [ "MPExtReadMPF", "mpo_8h.html#ab753217a25fea5be9f2bae5fafac8b24", null ]
 ];

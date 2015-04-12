@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Libmpo
-   &#160;<span id="projectnumber">Build #31</span>
+   &#160;<span id="projectnumber">Build #32</span>
    </div>
    <div id="projectbrief">A WIP library to decode and encode MPO (multiple picture object) files</div>
   </td>
@@ -119,6 +119,7 @@ $(document).ready(function(){initNavTree('mpo_8h.html','');});
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;jpeglib.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 </div>
 <p><a href="mpo_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -141,8 +142,6 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpo__compress__struct.html">mpo_compress_struct</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpo__decompress__struct.html">mpo_decompress_struct</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -246,24 +245,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae861a478dd8a2e3f9ae312c98f4c0fbf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae861a478dd8a2e3f9ae312c98f4c0fbf"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>decompress_mpo</b> (char *filename)</td></tr>
-<tr class="separator:ae861a478dd8a2e3f9ae312c98f4c0fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a5292d1cac36daaafb744b54df7b6b9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a5292d1cac36daaafb744b54df7b6b9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>decompress_mpo_from_mem</b> (unsigned char *src, long size, int isFirstImage)</td></tr>
-<tr class="separator:a5a5292d1cac36daaafb744b54df7b6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7479dd533f656d1db59a606ad013f15b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7479dd533f656d1db59a606ad013f15b"></a>
-boolean&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadAPP02AsFirstImage</b> (j_decompress_ptr cinfo)</td></tr>
-<tr class="separator:a7479dd533f656d1db59a606ad013f15b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc3fb561b9b2a71ac67b5035146f4fb4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acc3fb561b9b2a71ac67b5035146f4fb4"></a>
-boolean&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadAPP02</b> (j_decompress_ptr cinfo)</td></tr>
-<tr class="separator:acc3fb561b9b2a71ac67b5035146f4fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab753217a25fea5be9f2bae5fafac8b24"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab753217a25fea5be9f2bae5fafac8b24"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadMPF</b> (<a class="el" href="struct_m_p_fbuffer.html">MPFbuffer_ptr</a> b, <a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data, int isFirstImage)</td></tr>
+<tr class="separator:ab753217a25fea5be9f2bae5fafac8b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69b441ebf55e694fe35f9135bf951c4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69b441ebf55e694fe35f9135bf951c4d"></a>
 char&#160;</td><td class="memItemRight" valign="bottom"><b>isLittleEndian</b> ()</td></tr>
 <tr class="separator:a69b441ebf55e694fe35f9135bf951c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07ea329e8ad62846b81fccd3531c0d6e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07ea329e8ad62846b81fccd3531c0d6e"></a>
-boolean&#160;</td><td class="memItemRight" valign="bottom"><b>MPExtReadMPF</b> (<a class="el" href="struct_m_p_fbuffer.html">MPFbuffer_ptr</a> b, <a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data, int isFirstImage)</td></tr>
-<tr class="separator:a07ea329e8ad62846b81fccd3531c0d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7693a9fc1571b76eeb781751bd110c37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7693a9fc1571b76eeb781751bd110c37"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyMPF_Data</b> (<a class="el" href="struct_m_p_ext___data.html">MPExt_Data</a> *data)</td></tr>
 <tr class="separator:a7693a9fc1571b76eeb781751bd110c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -446,7 +433,7 @@ Each type may have subtypes </p>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_d2baaf53efa624276349580d96691ae7.html">libmpo</a></li><li class="navelem"><a class="el" href="mpo_8h.html">mpo.h</a></li>
-    <li class="footer">Generated on Sat Apr 4 2015 21:17:15 for Libmpo by
+    <li class="footer">Generated on Sun Apr 12 2015 11:47:32 for Libmpo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>
