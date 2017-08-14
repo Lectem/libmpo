@@ -1,9 +1,9 @@
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
 #include <stdio.h>
+#include <string.h>
 #include <libmpo/mpodatasrc.h>
 #include "jpeglib.h"
 #include "jerror.h"
-
 
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ GLOBAL(void)
 my_jpeg_mem_src (j_decompress_ptr cinfo,
 	      unsigned char * inbuffer, unsigned long insize)
 {
-  struct jpeg_source_mgr * src;
+  my_src_ptr src; // Needed because my_ftell relies on buffer_file_offset
 
   if (inbuffer == NULL || insize == 0)	/* Treat empty input as fatal error */
     ERREXIT(cinfo, JERR_INPUT_EMPTY);
@@ -245,17 +245,19 @@ my_jpeg_mem_src (j_decompress_ptr cinfo,
   if (cinfo->src == NULL) {	/* first time for this JPEG object? */
     cinfo->src = (struct jpeg_source_mgr *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
-				  sizeof(struct jpeg_source_mgr));
+				  sizeof(my_source_mgr));
   }
 
-  src = cinfo->src;
-  src->init_source = init_mem_source;
-  src->fill_input_buffer = fill_mem_input_buffer;
-  src->skip_input_data = skip_input_data;
-  src->resync_to_restart = jpeg_resync_to_restart; /* use default method */
-  src->term_source = term_source;
-  src->bytes_in_buffer = (size_t) insize;
-  src->next_input_byte = (JOCTET *) inbuffer;
+  src = (my_src_ptr )cinfo->src;
+  memset(src,0,sizeof(my_source_mgr));
+  src->pub.init_source = init_mem_source;
+  src->pub.fill_input_buffer = fill_mem_input_buffer;
+  src->pub.skip_input_data = skip_input_data;
+  src->pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
+  src->pub.term_source = term_source;
+  src->pub.bytes_in_buffer = (size_t) insize;
+  src->pub.next_input_byte = (JOCTET *) inbuffer;
+  src->buffer_file_offset = 0 ;
 }
 
 
