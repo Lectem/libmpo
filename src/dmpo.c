@@ -107,11 +107,12 @@ void mpo_stdio_src(mpo_decompress_struct *mpoinfo, FILE *input) {
         my_jpeg_stdio_src((j_decompress_ptr)&mpoinfo->cinfo,input);
 }
 
-/*
+
 void mpo_mem_src(mpo_decompress_struct *mpoinfo, unsigned char *inbuffer, unsigned long insize) {
-    printf("NOT IMPLEMENTED");
+    if(mpoinfo && inbuffer && insize > 0 )
+        my_jpeg_mem_src((j_decompress_ptr)&mpoinfo->cinfo,inbuffer,insize);
 }
-*/
+
 
 bool mpo_read_header(mpo_decompress_struct *mpoinfo) {
     bool res = false;

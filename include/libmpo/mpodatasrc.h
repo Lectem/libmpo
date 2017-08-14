@@ -25,6 +25,9 @@ typedef my_source_mgr * my_src_ptr;
 GLOBAL(void)
 my_jpeg_stdio_src (j_decompress_ptr cinfo, FILE * infile);
 
+GLOBAL(void)
+my_jpeg_mem_src (j_decompress_ptr cinfo, unsigned char * inbuffer, unsigned long insize);
+
 static size_t my_ftell(my_src_ptr src)
 {
     if(src->pub.next_input_byte)
